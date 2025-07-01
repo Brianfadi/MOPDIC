@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ program.title }} - Programs{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'main:home' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'main:program_list' %}">Programs</a></li>
+                    <li class="breadcrumb-item active">{{ program.title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <article class="mb-5">
+                {% if program.image %}
+                <img src="{{ program.image.url }}" class="img-fluid mb-4" alt="{{ program.title }}">
+                {% endif %}
+                <h1 class="mb-3">{{ program.title }}</h1>
+                <div class="text-muted mb-3">
+                    <small>
+                        Start Date: {{ program.start_date|date:"F j, Y" }}
+                        {% if program.end_date %}
+                        | End Date: {{ program.end_date|date:"F j, Y" }}
+                        {% endif %}
+                    </small>
+                </div>
+                <div class="content">
+                    {{ program.description|safe }}
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Related Programs</h5>
+                    {% for related in related_programs %}
+                    <div class="mb-3">
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <a href="{% url 'main:program_detail' related.slug %}">{{ related.title }}</a>
+                        </h6>
+                        <p class="card-text small">
+                            {{ related.description|truncatewords:15 }}
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

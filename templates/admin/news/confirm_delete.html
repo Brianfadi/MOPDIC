@@ -1,0 +1,32 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-danger">
+            <i class="fas fa-exclamation-triangle"></i> Confirm Deletion
+        </h6>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-danger">
+            <h5 class="alert-heading">Warning!</h5>
+            <p>You are about to delete the following news article. This action cannot be undone.</p>
+            <hr>
+            <p class="mb-0"><strong>Title:</strong> {{ news.title }}</p>
+            <p class="mb-0"><strong>Publish Date:</strong> {{ news.publish_date|date:"F j, Y" }}</p>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Yes, delete this article
+                </button>
+                <a href="{% url 'admin:news_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> No, take me back
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

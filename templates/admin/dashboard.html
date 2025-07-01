@@ -1,0 +1,240 @@
+{% extends 'admin/base.html' %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Welcome Card -->
+    <div class="col-12 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Welcome back, {{ request.user.get_full_name|default:request.user.username }}!</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">MOPDIC Administration Panel</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-shield fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- News Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            News Articles</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ news_count|default:"0" }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-newspaper fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+                <a href="{% url 'admin:news_list' %}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Upcoming Events</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ events_count|default:"0" }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+                <a href="{% url 'admin:events_list' %}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projects Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Active Projects</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ projects_count|default:"0" }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-project-diagram fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+                <a href="{% url 'admin:projects_list' %}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Users</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ users_count|default:"0" }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+                <a href="{% url 'admin:users_list' %}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Activity -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Recent Activity</h6>
+            </div>
+            <div class="card-body">
+                {% if recent_activities %}
+                    <div class="list-group list-group-flush">
+                        {% for activity in recent_activities %}
+                        <div class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">
+                                    <i class="fas fa-{% if activity.action == 'create' %}plus{% elif activity.action == 'update' %}edit{% elif activity.action == 'delete' %}trash{% elif activity.action == 'login' %}sign-in-alt{% elif activity.action == 'logout' %}sign-out-alt{% else %}info-circle{% endif %} me-2"></i>
+                                    {{ activity.get_action_display }}
+                                </h6>
+                                <small class="text-muted" title="{{ activity.timestamp|date:'M d, Y H:i' }}">
+                                    {{ activity.timestamp|timesince }} ago
+                                </small>
+                            </div>
+                            {% if activity.object_repr %}
+                                <p class="mb-1 small">
+                                    {{ activity.object_repr }}
+                                </p>
+                            {% endif %}
+                            {% if activity.content_type %}
+                                <p class="mb-1 small text-muted">
+                                    {{ activity.content_type|title }}
+                                </p>
+                            {% endif %}
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    {% if activity.user %}
+                                        {{ activity.user.get_full_name|default:activity.user.username }}
+                                    {% else %}
+                                        System
+                                    {% endif %}
+                                </small>
+                                {% if activity.changes %}
+                                    <button class="btn btn-sm btn-link p-0" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#changes-{{ activity.id }}" aria-expanded="false" 
+                                            aria-controls="changes-{{ activity.id }}">
+                                        <small>Show changes</small>
+                                    </button>
+                                {% endif %}
+                            </div>
+                            {% if activity.changes %}
+                                <div class="collapse mt-2" id="changes-{{ activity.id }}">
+                                    <div class="card card-body bg-light p-2 small">
+                                        <pre class="mb-0">{{ activity.changes }}</pre>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No recent activity to display.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <a href="{% url 'admin:news_add' %}" class="btn btn-primary btn-icon-split w-100 mb-3">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-plus"></i>
+                            </span>
+                            <span class="text">Add News</span>
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a href="{% url 'admin:event_add' %}" class="btn btn-success btn-icon-split w-100 mb-3">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-calendar-plus"></i>
+                            </span>
+                            <span class="text">Add Event</span>
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a href="{% url 'admin:project_add' %}" class="btn btn-info btn-icon-split w-100 mb-3">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-project-diagram"></i>
+                            </span>
+                            <span class="text">Add Project</span>
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a href="{% url 'admin:media_upload' %}" class="btn btn-warning btn-icon-split w-100 mb-3">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-upload"></i>
+                            </span>
+                            <span class="text">Upload Media</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Information -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">System Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <p><strong>Python Version:</strong> {{ python_version }}</p>
+                        <p><strong>Django Version:</strong> {{ django_version }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Database:</strong> {{ database_info.name }} {{ database_info.version }}</p>
+                        <p><strong>Server Time:</strong> {% now "F j, Y, g:i a" %}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Environment:</strong> {{ environment }}</p>
+                        <p><strong>Debug Mode:</strong> {{ debug|yesno:"On,Off" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

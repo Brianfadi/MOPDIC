@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ news.title }} - News - MOPDIC{% endblock %}
+
+{% block extra_css %}
+<style>
+    .news-feature-image {
+        max-height: 500px;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+    .news-category {
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        display: inline-block;
+    }
+    .news-meta {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+    .news-content {
+        line-height: 1.8;
+        font-size: 1.1rem;
+    }
+    .news-content img {
+        max-width: 100%;
+        height: auto;
+        margin: 1.5rem 0;
+        border-radius: 8px;
+    }
+    .news-content p {
+        margin-bottom: 1.5rem;
+    }
+    .share-buttons {
+        border-top: 1px solid #eee;
+        padding-top: 1.5rem;
+        margin-top: 2rem;
+    }
+    .related-news .card {
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 1.5rem;
+    }
+    .related-news .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .related-news .card-img-top {
+        height: 180px;
+        object-fit: cover;
+    }
+    .related-news .card-title {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .related-news .card-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'main:home' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'main:news_list' %}">News & Updates</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ news.title|truncatewords:5 }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <article class="mb-5">
+                {% if news.feature_image %}
+                <img src="{{ news.feature_image.url }}" class="news-feature-image" alt="{{ news.title }}">
+                {% else %}
+                <div class="bg-light text-center p-5 mb-4" style="border-radius: 8px;">
+                    <i class="fas fa-newspaper fa-4x text-muted mb-3"></i>
+                    <p class="mb-0">No featured image</p>
+                </div>
+                {% endif %}
+
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    {% for category in news.categories.all %}
+                    <span class="badge bg-primary">{{ category.name }}</span>
+                    {% endfor %}
+                </div>
+
+                <h1 class="mb-3">{{ news.title }}</h1>
+                
+                <div class="d-flex align-items-center mb-4">
+                    <div class="d-flex align-items-center me-4">
+                        <i class="far fa-calendar-alt me-2"></i>
+                        <span>{{ news.publish_date|date:"F j, Y" }}</span>
+                    </div>
+                    {% if news.author %}
+                    <div class="d-flex align-items-center">
+                        <i class="far fa-user me-2"></i>
+                        <span>{{ news.author.get_full_name|default:news.author.username }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="news-content">
+                    {{ news.content|safe }}
+                </div>
+
+                <div class="share-buttons">
+                    <h6 class="mb-3">Share this article:</h6>
+                    <div class="d-flex gap-2">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                           target="_blank" class="btn btn-sm btn-outline-primary">
+                            <i class="fab fa-facebook-f me-1"></i> Facebook
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ news.title|urlencode }}" 
+                           target="_blank" class="btn btn-sm btn-outline-info">
+                            <i class="fab fa-twitter me-1"></i> Twitter
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" 
+                           target="_blank" class="btn btn-sm btn-outline-primary">
+                            <i class="fab fa-linkedin-in me-1"></i> LinkedIn
+                        </a>
+                        <a href="mailto:?subject={{ news.title|urlencode }}&body=Check%20this%20out:%20{{ request.build_absolute_uri|urlencode }}" 
+                           class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-envelope me-1"></i> Email
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <aside class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Latest News</h5>
+                    {% for latest in latest_news %}
+                    <div class="d-flex mb-3">
+                        {% if latest.feature_image %}
+                        <img src="{{ latest.feature_image.url }}" class="rounded me-3" width="80" height="60" style="object-fit: cover;" alt="{{ latest.title }}">
+                        {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center me-3" style="width: 80px; height: 60px;">
+                            <i class="fas fa-newspaper text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <h6 class="mb-1">
+                                <a href="{% url 'main:news_detail' latest.id %}" class="text-decoration-none">{{ latest.title|truncatewords:6 }}</a>
+                            </h6>
+                            <p class="small text-muted mb-0">{{ latest.publish_date|date:"M j, Y" }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <a href="{% url 'main:news_list' %}" class="btn btn-outline-primary btn-sm w-100 mt-2">View All News</a>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Categories</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for category in categories %}
+                        <a href="#" class="badge bg-light text-dark text-decoration-none">{{ category.name }} ({{ category.news_posts.count }})</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    {% if related_news %}
+    <section class="related-news mt-5 pt-4 border-top">
+        <h3 class="mb-4">Related News</h3>
+        <div class="row">
+            {% for related in related_news %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    {% if related.feature_image %}
+                    <img src="{{ related.feature_image.url }}" class="card-img-top" alt="{{ related.title }}">
+                    {% else %}
+                    <div class="bg-light text-center p-4">
+                        <i class="fas fa-newspaper fa-3x text-muted"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'main:news_detail' related.id %}" class="text-decoration-none">
+                                {{ related.title|truncatewords:8 }}
+                            </a>
+                        </h5>
+                        <p class="card-text">{{ related.excerpt|truncatewords:15|safe }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="{% url 'main:news_detail' related.id %}" class="btn btn-sm btn-outline-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

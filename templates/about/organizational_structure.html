@@ -1,0 +1,468 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - MOPDIC{% endblock %}
+
+{% block extra_css %}
+<style>
+    .org-structure-section {
+        padding: 80px 0;
+    }
+    
+    .org-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    .org-header h1 {
+        font-size: 2.8rem;
+        color: #2c3e50;
+        margin-bottom: 15px;
+    }
+    
+    .org-header p {
+        font-size: 1.2rem;
+        color: #6c757d;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .org-chart {
+        position: relative;
+        margin: 50px 0;
+    }
+    
+    .org-level {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 40px;
+    }
+    
+    .org-item {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        width: 250px;
+        margin: 0 15px;
+        position: relative;
+        transition: all 0.3s ease;
+        border-top: 3px solid var(--primary-color);
+    }
+    
+    .org-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .org-item img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+        border: 3px solid #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .org-item h3 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        color: #2c3e50;
+    }
+    
+    .org-item p {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+    
+    .org-item .position {
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .org-connector {
+        position: absolute;
+        width: 2px;
+        background: #dee2e6;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: -1;
+    }
+    
+    .org-connector.top {
+        top: -20px;
+        height: 20px;
+    }
+    
+    .org-connector.bottom {
+        bottom: -40px;
+        height: 40px;
+    }
+    
+    .org-connector.horizontal {
+        width: 30px;
+        height: 2px;
+        top: 50%;
+        left: -30px;
+        transform: none;
+    }
+    
+    .org-level-1 {
+        margin-bottom: 60px;
+    }
+    
+    .org-level-2 {
+        margin-bottom: 60px;
+    }
+    
+    .org-level-3 {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+    }
+    
+    .org-level-3 .org-item {
+        width: 220px;
+        margin: 0;
+    }
+    
+    .org-departments {
+        margin-top: 60px;
+    }
+    
+    .department-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border-left: 3px solid var(--primary-color);
+    }
+    
+    .department-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .department-card h3 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+    }
+    
+    .department-card ul {
+        padding-left: 20px;
+        margin-bottom: 0;
+    }
+    
+    .department-card ul li {
+        margin-bottom: 8px;
+        position: relative;
+        padding-left: 15px;
+    }
+    
+    .department-card ul li:before {
+        content: '•';
+        color: var(--primary-color);
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+    
+    .org-description {
+        max-width: 900px;
+        margin: 0 auto 50px;
+        text-align: center;
+    }
+    
+    .org-description p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #555;
+    }
+    
+    @media (max-width: 992px) {
+        .org-level {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .org-item {
+            margin: 0 0 30px 0;
+        }
+        
+        .org-connector.horizontal {
+            display: none;
+        }
+        
+        .org-connector.vertical {
+            display: block;
+            width: 2px;
+            height: 30px;
+            left: 50%;
+            top: -30px;
+            transform: translateX(-50%);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .org-header h1 {
+            font-size: 2.2rem;
+        }
+        
+        .org-description p {
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+{% include 'includes/page_header.html' with title='Organizational Structure' %}
+
+<!-- Organizational Structure Section -->
+<section class="org-structure-section">
+    <div class="container">
+        <div class="org-header">
+            <h1>Our Organizational Structure</h1>
+            <p>Clear lines of responsibility and efficient coordination for effective service delivery</p>
+        </div>
+        
+        <div class="org-description">
+            <p>The Ministry of Planning and International Cooperation is structured to effectively deliver on its mandate of planning, coordinating, and monitoring development programs. Our organizational structure is designed to promote efficiency, accountability, and excellence in service delivery.</p>
+        </div>
+        
+        <div class="org-chart">
+            <!-- Level 1 - Minister -->
+            <div class="org-level org-level-1">
+                <div class="org-item">
+                    <div class="org-connector bottom"></div>
+                    <img src="{% static 'images/team/minister.jpg' %}" alt="Hon. Minister">
+                    <h3>Hon. Abdullahi Abdi</h3>
+                    <p class="position">Minister of Planning & International Cooperation</p>
+                    <p><i class="fas fa-envelope me-2"></i> minister@mopic.puntland.gov.so</p>
+                </div>
+            </div>
+            
+            <!-- Level 2 - State Ministers & DG -->
+            <div class="org-level org-level-2">
+                <div class="org-item">
+                    <div class="org-connector top"></div>
+                    <div class="org-connector bottom"></div>
+                    <div class="org-connector horizontal" style="left: auto; right: -30px;"></div>
+                    <img src="{% static 'images/team/state-minister.jpg' %}" alt="State Minister">
+                    <h3>Dr. Aisha Mohamed</h3>
+                    <p class="position">State Minister</p>
+                    <p><i class="fas fa-envelope me-2"></i> stateminister@mopic.puntland.gov.so</p>
+                </div>
+                
+                <div class="org-item">
+                    <div class="org-connector top"></div>
+                    <div class="org-connector bottom"></div>
+                    <div class="org-connector horizontal"></div>
+                    <img src="{% static 'images/team/dg.jpg' %}" alt="Director General">
+                    <h3>Eng. Mohamed Hassan</h3>
+                    <p class="position">Director General</p>
+                    <p><i class="fas fa-envelope me-2"></i> dg@mopic.puntland.gov.so</p>
+                </div>
+                
+                <div class="org-item">
+                    <div class="org-connector top"></div>
+                    <div class="org-connector bottom"></div>
+                    <div class="org-connector horizontal" style="left: auto; right: -30px;"></div>
+                    <img src="{% static 'images/team/deputy-dg.jpg' %}" alt="Deputy Director General">
+                    <h3>Ms. Fatima Ahmed</h3>
+                    <p class="position">Deputy Director General</p>
+                    <p><i class="fas fa-envelope me-2"></i> deputydg@mopic.puntland.gov.so</p>
+                </div>
+            </div>
+            
+            <!-- Level 3 - Departments -->
+            <div class="org-level org-level-3">
+                <div class="org-item">
+                    <div class="org-connector top"></div>
+                    <h3>Planning & Statistics</h3>
+                    <p class="position">Director: Mr. Abdiwali Ali</p>
+                    <p><i class="fas fa-envelope me-2"></i> planning@mopic.puntland.gov.so</p>
+                </div>
+                
+                <div class="org-item">
+                    <div class="org-connector top"></div>
+                    <h3>International Cooperation</h3>
+                    <p class="position">Director: Ms. Zahra Omar</p>
+                    <p><i class="fas fa-envelope me-2"></i> cooperation@mopic.puntland.gov.so</p>
+                </div>
+                
+                <div class="org-item">
+                    <div class="org-connector top"></div>
+                    <h3>Project Implementation</h3>
+                    <p class="position">Director: Eng. Ahmed Mohamud</p>
+                    <p><i class="fas fa-envelope me-2"></i> projects@mopic.puntland.gov.so</p>
+                </div>
+                
+                <div class="org-item">
+                    <div class="org-connector top"></div>
+                    <h3>Monitoring & Evaluation</h3>
+                    <p class="position">Director: Dr. Maryan Yusuf</p>
+                    <p><i class="fas fa-envelope me-2"></i> monitoring@mopic.puntland.gov.so</p>
+                </div>
+                
+                <div class="org-item">
+                    <div class="org-connector top"></div>
+                    <h3>Research & Development</h3>
+                    <p class="position">Director: Dr. Omar Abdi</p>
+                    <p><i class="fas fa-envelope me-2"></i> research@mopic.puntland.gov.so</p>
+                </div>
+                
+                <div class="org-item">
+                    <div class="org-connector top"></div>
+                    <h3>Human Resources</h3>
+                    <p class="position">Director: Ms. Khadija Abdi</p>
+                    <p><i class="fas fa-envelope me-2"></i> hr@mopic.puntland.gov.so</p>
+                </div>
+                
+                <div class="org-item">
+                    <div class="org-connector top"></div>
+                    <h3>Finance & Administration</h3>
+                    <p class="position">Director: Mr. Ali Hassan</p>
+                    <p><i class="fas fa-envelope me-2"></i> finance@mopic.puntland.gov.so</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="org-departments">
+            <div class="section-title text-center mb-5">
+                <h2>Key Departments & Units</h2>
+                <p class="lead">Specialized teams working together for development excellence</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="department-card">
+                        <h3>Planning & Statistics Department</h3>
+                        <p>Responsible for formulating development plans, policies, and strategies for the region.</p>
+                        <h4>Key Functions:</h4>
+                        <ul>
+                            <li>Formulate and coordinate development plans</li>
+                            <li>Conduct socio-economic research</li>
+                            <li>Maintain statistical database</li>
+                            <li>Coordinate with line ministries</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="department-card">
+                        <h3>International Cooperation Department</h3>
+                        <p>Manages partnerships and cooperation with international organizations and donors.</p>
+                        <h4>Key Functions:</h4>
+                        <ul>
+                            <li>Coordinate international development assistance</li>
+                            <li>Facilitate donor coordination</li>
+                            <li>Manage partnership agreements</li>
+                            <li>Monitor aid effectiveness</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="department-card">
+                        <h3>Project Implementation Unit</h3>
+                        <p>Oversees the implementation of development projects across the region.</p>
+                        <h4>Key Functions:</h4>
+                        <ul>
+                            <li>Supervise project implementation</li>
+                            <li>Ensure quality and standards</li>
+                            <li>Manage project teams</li>
+                            <li>Coordinate with contractors</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="department-card">
+                        <h3>Monitoring & Evaluation Unit</h3>
+                        <p>Tracks and evaluates the progress and impact of development programs.</p>
+                        <h4>Key Functions:</h4>
+                        <ul>
+                            <li>Develop M&E frameworks</li>
+                            <li>Conduct field monitoring</li>
+                            <li>Evaluate program impact</li>
+                            <li>Prepare progress reports</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3>Need more information about our structure?</h3>
+                <p class="mb-0">Download our detailed organizational chart or contact our administration office.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <a href="#" class="btn btn-primary me-2"><i class="fas fa-download me-2"></i>Download Chart</a>
+                <a href="{% url 'main:contact' %}" class="btn btn-outline-primary">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Document ready function
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add animation to org chart items
+        const orgItems = document.querySelectorAll('.org-item');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        orgItems.forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            item.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+            observer.observe(item);
+        });
+        
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

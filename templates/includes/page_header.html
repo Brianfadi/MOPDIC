@@ -1,0 +1,27 @@
+{% load static %}
+<!-- Page Header -->
+<div class="page-header {% if page_header_class %}{{ page_header_class }}{% else %}bg-primary text-white py-5{% endif %}">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="display-4 mb-3">{{ title }}</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb {% if breadcrumb_class %}{{ breadcrumb_class }}{% else %}bg-transparent p-0 mb-0{% endif %}">
+                        <li class="breadcrumb-item"><a href="{% url 'main:home' %}" class="text-white-50">Home</a></li>
+                        {% if breadcrumbs %}
+                            {% for crumb in breadcrumbs %}
+                                {% if forloop.last %}
+                                    <li class="breadcrumb-item active" aria-current="page">{{ crumb.name }}</li>
+                                {% else %}
+                                    <li class="breadcrumb-item"><a href="{{ crumb.url }}" class="text-white-50">{{ crumb.name }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                        {% endif %}
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

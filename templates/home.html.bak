@@ -1,0 +1,1928 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - MOPDIC{% endblock %}
+
+{% block extra_css %}
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<style>
+    /* Animation Keyframes */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    :root {
+        --primary-blue: #003366;
+        --secondary-blue: #004080;
+        --accent-blue: #0077cc;
+        --light-blue: #e6f0f9;
+        --white: #ffffff;
+        --text-dark: #333333;
+        --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    :root {
+        --primary-blue: #003366;
+        --secondary-blue: #004080;
+        --accent-blue: #0077cc;
+        --light-blue: #e6f0f9;
+        --white: #ffffff;
+        --text-dark: #333333;
+    }
+    
+    /* Enhanced Hero Section with Parallax Effect */
+    .hero-section {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 51, 102, 0.7);
+        z-index: 1;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 120px 0;
+    }
+    
+    .hero-content h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .hero-content .lead {
+        font-size: 1.5rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    /* Slide backgrounds with overlay */
+    .slide {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+    
+    .slide.active {
+        opacity: 1;
+    }
+    
+    .slide-1 {
+        background-image: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.7)), 
+                          url('{% static "images/hero-image.jpg" %}');
+    }
+    .slide-2 {
+        background-image: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.7)), 
+                          url('{% static "images/1750862523664.jpg" %}');
+    }
+    .slide-3 {
+        background-image: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.7)), 
+                          url('{% static "images/1750862545510.jpg" %}');
+        background-position: center;
+    }
+    .slide-4 {
+        background-image: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.7)), 
+                          url('{% static "images/1750862555912.jpg" %}');
+    }
+    
+    section {
+        padding: 100px 0;
+        position: relative;
+    }
+    
+    /* Section Headers */
+    .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    .section-header h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-blue);
+        margin-bottom: 15px;
+        position: relative;
+        display: inline-block;
+    }
+    .section-header h2:after {
+        content: '';
+        position: absolute;
+        width: 60px;
+        height: 3px;
+        background: var(--accent-blue);
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .section-header p {
+        font-size: 1.1rem;
+        color: #666;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .hero-section {
+        position: relative;
+        color: var(--white);
+        overflow: hidden;
+        height: 90vh;
+        min-height: 700px;
+        margin-top: 0 !important;
+        padding: 0;
+        background: linear-gradient(135deg, rgba(0, 51, 102, 0.8) 0%, rgba(0, 80, 158, 0.9) 100%);
+    }
+    .hero-slider {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        z-index: 1;
+    }
+    .slide.active {
+        opacity: 1;
+    }
+    .hero-content {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        z-index: 2;
+        text-align: center;
+        padding: 20px;
+        margin: 0 5%;
+    }
+    .hero-section h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 25px;
+        line-height: 1.2;
+        color: var(--white);
+        text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fadeInUp 0.8s ease-out;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        letter-spacing: -0.5px;
+    }
+    .hero-section p {
+        font-size: 1.4rem;
+        margin: 0 auto 40px;
+        max-width: 800px;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 400;
+        line-height: 1.6;
+        animation: fadeInUp 1s ease-out 0.3s both;
+    }
+    
+    /* Image Hover Effect */
+    .img-hover-zoom {
+        overflow: hidden;
+        border-radius: 12px;
+    }
+    .img-hover-zoom img {
+        transition: var(--transition);
+    }
+    .img-hover-zoom:hover img {
+        transform: scale(1.05);
+    }
+    
+    /* Stats Counter */
+    .stats-item {
+        text-align: center;
+        padding: 30px 20px;
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: var(--transition);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    .stats-item:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    }
+    .stats-item i {
+        font-size: 2.5rem;
+        color: var(--accent-blue);
+        margin-bottom: 15px;
+        display: inline-block;
+    }
+    .counter {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin: 10px 0;
+        display: block;
+    }
+    .stats-item p {
+        color: #666;
+        margin: 0;
+        font-size: 1.1rem;
+    }
+    
+    .btn-custom {
+        background-color: var(--accent-blue);
+        color: var(--white);
+        border: 2px solid var(--accent-blue);
+        padding: 16px 40px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 1rem;
+        letter-spacing: 1.5px;
+        transition: var(--transition);
+        animation: fadeInUp 1s ease-out 0.6s both;
+        box-shadow: 0 8px 25px -8px rgba(0, 119, 204, 0.5);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+    .btn-custom:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: 0.5s;
+        z-index: -1;
+    }
+    .btn-custom:hover:before {
+        left: 100%;
+    }
+    .btn-custom:hover {
+        background: var(--primary-blue);
+        border-color: var(--primary-blue);
+        color: var(--white);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    .btn-outline-custom {
+        border: 2px solid #003366; /* Dark blue border */
+        color: #003366; /* Dark blue text */
+        background: transparent;
+        padding: 10px 28px;
+        border-radius: 4px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        animation: fadeInUp 1s ease-out 0.6s both;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .btn-outline-custom:hover {
+        background: rgba(255,255,255,0.1);
+        color: var(--white);
+        transform: translateY(-3px);
+        border-color: var(--white);
+    }
+    .quick-links {
+        background: linear-gradient(135deg, #f8fafd 0%, #eef4fb 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    .quick-links:before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('{% static "images/pattern.png" %}') repeat;
+        opacity: 0.02;
+        z-index: 0;
+    }
+    .quick-links .container {
+        position: relative;
+        z-index: 1;
+    }
+    .quick-link-item {
+        display: block;
+        background: var(--white);
+        padding: 35px 25px;
+        border-radius: 12px;
+        text-align: center;
+        color: var(--text-dark);
+        text-decoration: none;
+        transition: var(--transition);
+        height: 100%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+    .quick-link-item:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0;
+        background: var(--primary-blue);
+        z-index: -1;
+        transition: var(--transition);
+    }
+    .quick-link-item:hover:after {
+        height: 100%;
+        opacity: 0.03;
+    }
+    .quick-link-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        color: var(--primary-blue);
+    }
+    .icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--light-blue) 0%, #d4e4f5 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        color: var(--primary-blue);
+        font-size: 32px;
+        transition: var(--transition);
+        position: relative;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+    .quick-link-item:hover .icon-wrapper {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+        color: var(--white);
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0,51,102,0.2);
+    }
+    .quick-link-item h4 {
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: var(--primary-blue);
+        font-size: 1.25rem;
+        transition: var(--transition);
+    }
+    .quick-link-item:hover h4 {
+        color: var(--accent-blue);
+    }
+    .quick-link-item p {
+        font-size: 1rem;
+        color: #555;
+        margin: 0;
+        line-height: 1.7;
+        transition: var(--transition);
+    }
+    .quick-link-item:hover p {
+        color: #444;
+    }
+    
+    /* Enhanced Card Styles */
+    .card {
+        transition: var(--transition);
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+        border: 1px solid rgba(0,0,0,0.05);
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    }
+    .card-img-top {
+        height: 220px;
+        object-fit: cover;
+        transition: var(--transition);
+    }
+    .card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+    .card-body {
+        padding: 1.75rem;
+    }
+    .card-title {
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin-bottom: 0.75rem;
+        font-size: 1.4rem;
+    }
+    .card-text {
+        color: #555;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+    }
+    .card-footer {
+        background: transparent;
+        border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    /* Floating Shapes Animation */
+    .floating-shapes {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+    
+    .shape {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.1;
+        z-index: -1;
+    }
+    
+    .shape-1 {
+        width: 300px;
+        height: 300px;
+        background: linear-gradient(45deg, var(--primary-blue), var(--accent-blue));
+        top: 10%;
+        left: -100px;
+        animation: float 15s ease-in-out infinite;
+    }
+    
+    .shape-2 {
+        width: 200px;
+        height: 200px;
+        background: linear-gradient(45deg, var(--accent-blue), #00ccff);
+        bottom: 15%;
+        right: -50px;
+        animation: float 18s ease-in-out infinite reverse;
+    }
+    
+    .shape-3 {
+        width: 150px;
+        height: 150px;
+        background: linear-gradient(45deg, #00ccff, #0066cc);
+        top: 50%;
+        right: 20%;
+        animation: float 12s ease-in-out infinite;
+    }
+    
+    .shape-4 {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(45deg, #0066cc, var(--primary-blue));
+        bottom: 20%;
+        left: 20%;
+        animation: float 20s ease-in-out infinite reverse;
+    }
+    
+    /* Scroll Down Animation */
+    .scroll-down {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0) translateX(-50%);
+        }
+        40% {
+            transform: translateY(-20px) translateX(-50%);
+        }
+        60% {
+            transform: translateY(-10px) translateX(-50%);
+        }
+    }
+    
+    /* Enhanced Card Hover Effects */
+    .hover-lift {
+        transition: all 0.3s ease;
+    }
+    
+    .hover-lift:hover {
+        transform: translateY(-10px) !important;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* Gradient Text */
+    .gradient-text {
+        background: linear-gradient(45deg, var(--primary-blue), var(--accent-blue));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+    
+    /* News Card Styles */
+    .news-card {
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+        height: 100%;
+    }
+    
+    .news-card .card-img-overlay {
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 50%);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+    
+    .news-card .card-title {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+    
+    .news-card .card-text {
+        color: #6c757d;
+        margin-bottom: 1.25rem;
+    }
+    
+    .news-card .badge {
+        font-weight: 500;
+        padding: 0.35em 0.65em;
+    }
+    
+    .news-card .btn-link {
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .news-card .btn-link:hover {
+        margin-left: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Statistics Section -->
+<section class="py-4 bg-primary text-white">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-3 col-6">
+                <div class="text-center">
+                    <div class="display-4 fw-bold mb-1">{{ news_count|default:'0' }}</div>
+                    <div class="text-uppercase small">News & Updates</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="text-center">
+                    <div class="display-4 fw-bold mb-1">{{ events_count|default:'0' }}</div>
+                    <div class="text-uppercase small">Upcoming Events</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="text-center">
+                    <div class="display-4 fw-bold mb-1">{{ projects_count|default:'0' }}</div>
+                    <div class="text-uppercase small">Active Projects</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="text-center">
+                    <div class="display-4 fw-bold mb-1">{{ total_beneficiaries|default:'0'|intcomma }}</div>
+                    <div class="text-uppercase small">Total Beneficiaries</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- News Ticker Section -->
+<div class="news-ticker bg-primary text-white py-2">
+    <div class="container">
+        <div class="ticker-container">
+            <div class="ticker-label fw-bold me-3 d-inline-flex align-items-center">
+                <i class="fas fa-bullhorn me-2"></i> Latest Updates:
+            </div>
+            <div class="ticker-content">
+                <ul class="ticker-list m-0 p-0 list-unstyled d-inline-flex">
+                    {% for news_item in latest_news %}
+                    <li class="ticker-item me-5 d-inline-flex align-items-center">
+                        <span class="badge bg-white text-primary me-2">NEW</span>
+                        <a href="{{ news_item.get_absolute_url }}" class="text-white text-decoration-none">{{ news_item.title }}</a>
+                    </li>
+                    {% empty %}
+                    <li class="ticker-item">No news updates at the moment.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* News Ticker Styles */
+.news-ticker {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    background: var(--primary-blue) !important;
+}
+
+.ticker-container {
+    display: flex;
+    align-items: center;
+}
+
+.ticker-label {
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.ticker-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.ticker-list {
+    display: inline-block;
+    white-space: nowrap;
+    animation: ticker 30s linear infinite;
+}
+
+.ticker-list:hover {
+    animation-play-state: paused;
+}
+
+.ticker-item {
+    display: inline-block;
+    padding-right: 30px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.ticker-item:hover {
+    opacity: 0.8;
+}
+
+@keyframes ticker {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Pause on hover */
+.ticker-content:hover .ticker-list {
+    animation-play-state: paused;
+}
+</style>
+
+<!-- Hero Section with Parallax -->
+<section class="hero-section">
+    <div class="hero-slider">
+        <!-- Slides with Parallax Effect -->
+        <div class="slide slide-1 active"></div>
+        <div class="slide slide-2"></div>
+        <div class="slide slide-3"></div>
+        <div class="slide slide-4"></div>
+        
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <div class="container text-center text-white">
+                <div class="animate__animated animate__fadeInDown">
+                    <h1 class="display-4 fw-bold mb-4">Welcome to Ministry of Planning, Development & International Cooperation</h1>
+                    <p class="lead mb-5">Puntland State of Somalia</p>
+                    <div class="d-flex gap-3 justify-content-center">
+                        <a href="#" class="btn btn-primary btn-lg px-4 py-2">
+                            <i class="fas fa-book-open me-2"></i>Read More
+                        </a>
+                        <a href="#contact" class="btn btn-outline-light btn-lg px-4 py-2">
+                            <i class="fas fa-envelope me-2"></i>Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Down Indicator -->
+        <div class="scroll-down">
+            <a href="#about" class="text-white">
+                <i class="fas fa-chevron-down fa-2x"></i>
+            </a>
+        </div>
+        
+        <!-- Slider Indicators -->
+        <div class="slider-indicators">
+            <span class="indicator active" onclick="goToSlide(0)"></span>
+            <span class="indicator" onclick="goToSlide(1)"></span>
+            <span class="indicator" onclick="goToSlide(2)"></span>
+            <span class="indicator" onclick="goToSlide(3)"></span>
+        </div>
+    </div>
+</section>
+
+<!-- Floating Shapes Background -->
+<div class="floating-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+</div>
+
+<!-- Latest News & Updates Section with Bootstrap Carousel -->
+<section class="py-5 position-relative bg-light">
+    <div class="position-absolute w-100 h-100 bg-pattern-dots"></div>
+    <div class="container position-relative z-1">
+        <div class="text-center mb-5">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 px-3 py-2 rounded-pill">Latest Updates</span>
+            <h2 class="mb-3">News & <span class="gradient-text">Updates</span></h2>
+            <p class="lead text-muted">Stay informed with the latest developments and announcements</p>
+        </div>
+
+        {% if latest_news %}
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="hover">
+                    <div class="carousel-inner">
+                    <!-- Indicators -->
+                    <div class="carousel-indicators mb-0">
+                        {% for news_item in latest_news %}
+                        <button type="button" data-bs-target="#newsCarousel" data-bs-slide-to="{{ forloop.counter0 }}" 
+                            {% if forloop.first %}class="active" aria-current="true"{% endif %} 
+                            aria-label="Slide {{ forloop.counter }}"></button>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Slides -->
+                    <div class="carousel-inner rounded-4 overflow-hidden">
+                        {% for news_item in latest_news %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="row g-0">
+                                    <!-- News Image -->
+                                    <div class="col-md-5">
+                                        <img src="{% if news_item.featured_image %}{{ news_item.featured_image.url }}{% else %}https://via.placeholder.com/600x400?text=No+Image{% endif %}" 
+                                             class="img-fluid rounded-start h-100" 
+                                             alt="{{ news_item.title }}"
+                                             style="object-fit: cover; min-height: 300px;">
+                                    </div>
+                                    <!-- News Content -->
+                                    <div class="col-md-7">
+                                        <div class="card-body h-100 d-flex flex-column">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <div>
+                                                    {% if news_item.is_new %}
+                                                    <span class="badge bg-primary me-2">New</span>
+                                                    {% endif %}
+                                                    {% if news_item.is_featured %}
+                                                    <span class="badge bg-warning text-dark">Featured</span>
+                                                    {% endif %}
+                                                </div>
+                                                <small class="text-muted">
+                                                    <i class="far fa-calendar-alt me-1"></i>
+                                                    {{ news_item.publish_date|date:"M d, Y" }}
+                                                </small>
+                                            </div>
+                                            <h5 class="card-title fw-bold">{{ news_item.title }}</h5>
+                                            <div class="card-text flex-grow-1">
+                                                <p>{{ news_item.summary|truncatewords:30|safe }}</p>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                                <span class="text-muted small">
+                                                    <i class="far fa-clock me-1"></i>
+                                                    {{ news_item.reading_time }} min read
+                                                </span>
+                                                <a href="{% url 'main:news_detail' news_item.slug %}" class="btn btn-primary btn-sm">
+                                                    Read More <i class="fas fa-arrow-right ms-1"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Controls -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'main:news_list' %}" class="btn btn-outline-primary px-4">
+                View All News <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i> No news articles available at the moment.
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+/* Custom styles for the news carousel */
+#newsCarousel {
+    max-width: 100%;
+    margin: 0 auto;
+}
+.carousel-item {
+    padding: 15px;
+}
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+    opacity: 0.8;
+}
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 1;
+}
+
+#newsCarousel .carousel-item {
+    transition: transform 0.6s ease-in-out;
+}
+
+#newsCarousel .card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+#newsCarousel .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+#newsCarousel .carousel-indicators {
+    bottom: -50px;
+}
+
+#newsCarousel .carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 5px;
+    background-color: #dee2e6;
+    border: none;
+    opacity: 1;
+}
+
+#newsCarousel .carousel-indicators button.active {
+    background-color: var(--primary-blue);
+}
+
+#newsCarousel .carousel-control-prev,
+#newsCarousel .carousel-control-next {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 1;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+#newsCarousel .carousel-control-prev {
+    left: -25px;
+}
+
+#newsCarousel .carousel-control-next {
+    right: -25px;
+}
+
+#newsCarousel .carousel-control-prev-icon,
+#newsCarousel .carousel-control-next-icon {
+    filter: invert(40%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%);
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+#newsCarousel .carousel-control-prev:hover,
+#newsCarousel .carousel-control-next:hover {
+    background: var(--primary-blue);
+}
+
+#newsCarousel .carousel-control-prev:hover .carousel-control-prev-icon,
+#newsCarousel .carousel-control-next:hover .carousel-control-next-icon {
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    #newsCarousel .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    #newsCarousel .carousel-control-prev {
+        left: 10px;
+    }
+    
+    #newsCarousel .carousel-control-next {
+        right: 10px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    #newsCarousel .col-md-5 {
+        height: 250px;
+    }
+    
+    #newsCarousel .carousel-item {
+        padding-bottom: 50px;
+    }
+    
+    #newsCarousel .carousel-indicators {
+        bottom: 20px;
+    }
+}
+</style>
+
+<!-- Add smooth transitions for carousel -->
+<style>
+.carousel-item {
+    transition: transform 0.6s ease-in-out;
+}
+.carousel-item img {
+    transition: opacity 0.6s ease-in-out;
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const indicators = document.querySelectorAll('.indicator');
+
+function showSlide(n) {
+    // Hide all slides
+    slides.forEach(slide => slide.classList.remove('active'));
+    indicators.forEach(ind => ind.classList.remove('active'));
+    
+    // Update current slide index
+    currentSlide = (n + slides.length) % slides.length;
+    
+    // Show current slide and update indicator
+    slides[currentSlide].classList.add('active');
+    indicators[currentSlide].classList.add('active');
+}
+
+function changeSlide(n) {
+    showSlide(currentSlide + n);
+}
+
+function goToSlide(n) {
+    showSlide(n);
+}
+
+// Auto slide every 5 seconds
+setInterval(() => {
+    changeSlide(1);
+}, 5000);
+
+// Initialize first slide
+showSlide(0);
+</script>
+
+<!-- Quick Links -->
+<section class="quick-links py-5 bg-light">
+    <div class="container position-relative" style="z-index: 1">
+        <div class="row g-4">
+            <div class="col-md-3 col-6">
+                <a href="#" class="quick-link-item">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h4>Announcements</h4>
+                    <p>Latest news and updates from the ministry</p>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="#" class="quick-link-item">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h4>Events</h4>
+                    <p>Upcoming conferences and meetings</p>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="#" class="quick-link-item">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h4>Reports</h4>
+                    <p>Publications and annual reports</p>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="#" class="quick-link-item">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h4>Downloads</h4>
+                    <p>Important documents and forms</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest News -->
+<section class="py-5 bg-light position-relative">
+    <div class="position-absolute w-100 h-100" style="
+        background: url('{% static 'images/pattern-light.png' %}') repeat;
+        opacity: 0.05;
+        z-index: 0;
+    "></div>
+    <div class="container position-relative" style="z-index: 1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Latest News & Updates</h2>
+            <a href="{% url 'main:news_list' %}" class="btn btn-outline-primary">View All News</a>
+        </div>
+        <div class="row g-4">
+            {% for news in latest_news %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    {% if news.feature_image %}
+                        <img src="{{ news.feature_image.url }}" class="card-img-top" alt="{{ news.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="fas fa-newspaper fa-3x"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <div class="mb-2">
+                            {% for category in news.categories.all %}
+                                <span class="badge bg-primary me-1 mb-1">{{ category.name }}</span>
+                            {% endfor %}
+                        </div>
+                        <h5 class="card-title">{{ news.title }}</h5>
+                        <p class="card-text text-muted small">
+                            <i class="far fa-calendar-alt me-1"></i> {{ news.publish_date|date:"F j, Y" }}
+                            {% if news.author %}
+                                <span class="ms-2"><i class="far fa-user me-1"></i> {{ news.author.get_full_name|default:news.author.username }}</span>
+                            {% endif %}
+                        </p>
+                        <p class="card-text flex-grow-1">
+                            {{ news.excerpt|truncatewords:20|safe }}
+                        </p>
+                        <a href="{% url 'main:news_detail' news.slug %}" class="btn btn-link p-0 mt-auto align-self-start">
+                            Read More <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="bg-light p-5 rounded">
+                    <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+                    <h4>No news available</h4>
+                    <p class="text-muted">Check back later for the latest updates</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Upcoming Events -->
+<section class="py-5 bg-white position-relative overflow-hidden">
+    <div class="position-absolute w-100 h-100" style="background: url('{% static 'images/pattern-light.png' %}') repeat; opacity: 0.03; z-index: 0;"></div>
+    <div class="container position-relative" style="z-index: 1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Upcoming Events</h2>
+            <a href="{% url 'main:news_events' %}" class="btn btn-outline-primary">View All Events</a>
+        </div>
+        <div class="row g-4">
+            {% for event in upcoming_events %}
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="position-relative">
+                        {% if event.feature_image %}
+                            <img src="{{ event.feature_image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-calendar-alt fa-3x"></i>
+                            </div>
+                        {% endif %}
+                        <div class="position-absolute top-0 start-0 m-3 bg-white px-3 py-1 rounded-pill text-primary fw-bold">
+                            <i class="far fa-calendar-alt me-2"></i> {{ event.start_date|date:"d M"|upper }}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="badge {% if event.status == 'upcoming' %}bg-primary{% elif event.status == 'ongoing' %}bg-success{% else %}bg-secondary{% endif %} bg-opacity-10 text-{% if event.status == 'upcoming' %}primary{% elif event.status == 'ongoing' %}success{% else %}secondary{% endif %} me-2">
+                                {{ event.get_status_display }}
+                            </span>
+                            <span class="text-muted small">
+                                <i class="far fa-clock me-1"></i> {{ event.start_date|time:"g:i A" }}
+                                {% if event.end_date %}- {{ event.end_date|time:"g:i A" }}{% endif %}
+                            </span>
+                        </div>
+                        <h5 class="card-title">{{ event.title }}</h5>
+                        <p class="card-text text-muted">{{ event.description|truncatewords:20|safe }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            {% if event.location %}
+                            <span class="text-primary"><i class="fas fa-map-marker-alt me-2"></i> {{ event.location|truncatechars:25 }}</span>
+                            {% endif %}
+                            <a href="#" class="btn btn-sm btn-outline-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="bg-light p-5 rounded">
+                    <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
+                    <h4>No upcoming events</h4>
+                    <p class="text-muted">Check back later for upcoming events</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Past Events -->
+<section class="py-5 bg-light position-relative overflow-hidden">
+    <div class="position-absolute w-100 h-100" style="background: url('{% static 'images/pattern-light.png' %}') repeat; opacity: 0.03; z-index: 0;"></div>
+    <div class="container position-relative" style="z-index: 1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Past Events</h2>
+            <a href="{% url 'main:news_events' %}" class="btn btn-outline-primary">View All Events</a>
+        </div>
+        <div class="row g-4">
+            {% for event in past_events %}
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="position-relative">
+                        {% if event.feature_image %}
+                            <img src="{{ event.feature_image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-calendar-alt fa-3x"></i>
+                            </div>
+                        {% endif %}
+                        <div class="position-absolute top-0 start-0 m-3 bg-white px-3 py-1 rounded-pill text-primary fw-bold">
+                            <i class="far fa-calendar-alt me-2"></i> {{ event.start_date|date:"d M"|upper }}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary me-2">
+                                {{ event.get_status_display }}
+                            </span>
+                            <span class="text-muted small">
+                                <i class="far fa-clock me-1"></i> {{ event.start_date|time:"g:i A" }}
+                                {% if event.end_date %}- {{ event.end_date|time:"g:i A" }}{% endif %}
+                            </span>
+                        </div>
+                        <h5 class="card-title">{{ event.title }}</h5>
+                        <p class="card-text text-muted">{{ event.description|truncatewords:20|safe }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            {% if event.location %}
+                            <span class="text-primary"><i class="fas fa-map-marker-alt me-2"></i> {{ event.location|truncatechars:25 }}</span>
+                            {% endif %}
+                            <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="bg-white p-5 rounded">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <h4>No past events available</h4>
+                    <p class="text-muted">Check back for updates on recent events</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- About Us Section -->
+<section class="py-5 bg-white position-relative overflow-hidden">
+    <div class="position-absolute w-100 h-100" style="background: url('{% static 'images/pattern-light.png' %}') repeat; opacity: 0.03; z-index: 0;"></div>
+    <div class="container position-relative" style="z-index: 1">
+        <div class="text-center mb-5">
+            <h2 class="text-primary">About Ministry of Planning, Development & International Cooperation</h2>
+            <p class="lead">Driving sustainable development and economic growth in SSC-Khaatumo</p>
+        </div>
+        
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <div class="position-relative mb-4">
+                    <img src="{% static 'images/1750862523664.jpg' %}" alt="Team Meeting" class="img-fluid rounded shadow" style="max-height: 400px; width: 100%; object-fit: cover;">
+                    <div class="position-absolute bottom-0 start-0 bg-primary text-white p-3 m-3 rounded">
+                        <h4 class="mb-0">Building a Better Future</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="ps-lg-4">
+                    <div class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle me-3">
+                                <i class="fas fa-eye fa-2x"></i>
+                            </div>
+                            <h3 class="h4 mb-0">Our Vision</h3>
+                        </div>
+                        <p class="text-muted mb-0">The Ministry endeavors to establish itself as a leading state macro-economic planning body; dedicated to nurturing sustainable socio-economic advancement. Our vision revolves around elevating the collective well-being of SSC-Khaatumo's population while cultivating an atmosphere conducive to drawing substantial investments from local stakeholders and diaspora communities.</p>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle me-3">
+                                <i class="fas fa-bullseye fa-2x"></i>
+                            </div>
+                            <h3 class="h4 mb-0">Our Mission</h3>
+                        </div>
+                        <p class="text-muted mb-0">The Ministry is on a mission to excel in economic planning by crafting effective State development plans and strategies. We achieve this through rigorous macro-economic research, the implementation of sound policies, and the integration of advanced data and technology systems. Our goal is to drive efficient and impactful planning for the continuous advancement of our region.</p>
+                    </div>
+                    
+                    <div class="d-grid gap-3 d-sm-flex">
+                        <a href="#" class="btn btn-primary btn-lg px-4">Learn More About Us</a>
+                        <a href="#" class="btn btn-outline-primary btn-lg px-4">Our Partners</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Projects Section -->
+<section class="py-5 bg-light position-relative">
+    <div class="position-absolute w-100 h-100" style="
+        background: url('{% static 'images/pattern-light.png' %}') repeat;
+        opacity: 0.05;
+        z-index: 0;
+    "></div>
+    <div class="container position-relative" style="z-index: 1">
+        <div class="text-center mb-5">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 px-3 py-2 rounded-pill">Our Work</span>
+            <h2 class="mb-3">Featured <span class="gradient-text">Projects</span></h2>
+            <p class="lead text-muted">Discover our ongoing and completed development initiatives</p>
+        </div>
+        
+        {% if featured_projects %}
+            <div class="position-relative">
+                <!-- Initialize Swiper -->
+                <div class="projects-carousel swiper">
+                    <div class="swiper-wrapper">
+                        {% for project in featured_projects %}
+                        <div class="swiper-slide">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                                {% if project.image %}
+                                <div class="position-relative" style="height: 200px; overflow: hidden;">
+                                    <img src="{{ project.image.url }}" class="card-img-top h-100 w-100" alt="{{ project.title }}" style="object-fit: cover;">
+                                    <div class="position-absolute top-0 end-0 p-2">
+                                        <span class="badge {% if project.status == 'completed' %}bg-success{% elif project.status == 'ongoing' %}bg-primary{% else %}bg-secondary{% endif %}">
+                                            {{ project.get_status_display }}
+                                        </span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ project.title }}</h5>
+                                    <p class="card-text text-muted">
+                                        {% if project.short_description %}
+                                            {{ project.short_description|truncatewords:20 }}
+                                        {% else %}
+                                            {{ project.description|striptags|truncatewords:20 }}
+                                        {% endif %}
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            {% if project.start_date %}
+                                                <small class="text-muted">
+                                                    <i class="far fa-calendar-alt me-1"></i> 
+                                                    {{ project.start_date|date:"M Y" }}
+                                                    {% if project.end_date %}
+                                                        - {{ project.end_date|date:"M Y" }}
+                                                    {% else %}
+                                                        - Present
+                                                    {% endif %}
+                                                </small>
+                                            {% endif %}
+                                        </div>
+                                        <a href="{% url 'main:project_detail' project.slug %}" class="btn btn-sm btn-outline-primary">
+                                            View Details <i class="fas fa-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Navigation buttons -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="{% url 'main:projects' %}" class="btn btn-outline-primary">
+                    View All Projects <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <div class="no-projects-message">
+                    <i class="fas fa-inbox fa-3x mb-3 text-muted"></i>
+                    <i class="fas fa-project-diagram fa-3x text-muted mb-3"></i>
+                    <h4>No Featured Projects Available</h4>
+                    <p class="text-muted">Check back soon for updates on our projects</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <style>
+        /* Projects Carousel Styles */
+        .projects-carousel {
+            width: 100%;
+            padding: 20px 0 40px;
+            position: relative;
+        }
+        
+        .projects-carousel .swiper-wrapper {
+            padding-bottom: 20px;
+        }
+        
+        .projects-carousel .swiper-slide {
+            height: auto;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        
+        .projects-carousel .swiper-slide-active {
+            opacity: 1;
+        }
+        
+        .projects-carousel .swiper-button-next,
+        .projects-carousel .swiper-button-prev {
+            color: var(--primary-color);
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .projects-carousel .swiper-button-next:after,
+        .projects-carousel .swiper-button-prev:after {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .projects-carousel .swiper-pagination-bullet {
+            width: 12px;
+            height: 12px;
+            background: #ddd;
+            opacity: 1;
+        }
+        
+        .projects-carousel .swiper-pagination-bullet-active {
+            background: var(--primary-color);
+            transform: scale(1.2);
+        }
+        .projects-carousel .swiper-slide {
+            height: auto;
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
+        .projects-carousel .swiper-slide:hover {
+            transform: translateY(-5px);
+        }
+        .projects-carousel .card {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        /* Custom navigation buttons */
+        .projects-carousel .swiper-button-next,
+        .projects-carousel .swiper-button-prev {
+            color: var(--primary-color);
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .projects-carousel .swiper-button-next:after,
+        .projects-carousel .swiper-button-prev:after {
+            font-size: 18px;
+        }
+        
+        /* Pagination */
+        .projects-carousel .swiper-pagination-bullet {
+            background: #ccc;
+            opacity: 1;
+        }
+        .projects-carousel .swiper-pagination-bullet-active {
+            background: var(--primary-color);
+        }
+        .projects-carousel .card:hover {
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+        }
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: var(--primary-blue);
+            background: rgba(255, 255, 255, 0.9);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .swiper-pagination-bullet {
+            width: 10px;
+            height: 10px;
+            background: #dee2e6;
+            opacity: 1;
+        }
+        .swiper-pagination-bullet-active {
+            background: var(--primary-blue);
+    
+    /* Custom navigation buttons */
+    .projects-carousel .swiper-button-next,
+    .projects-carousel .swiper-button-prev {
+        color: var(--primary-color);
+        background: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .projects-carousel .swiper-button-next:after,
+    .projects-carousel .swiper-button-prev:after {
+        font-size: 18px;
+    }
+    
+    /* Pagination */
+    .projects-carousel .swiper-pagination-bullet {
+        background: #ccc;
+        opacity: 1;
+    }
+    .projects-carousel .swiper-pagination-bullet-active {
+        background: var(--primary-color);
+    }
+    .projects-carousel .card:hover {
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+    }
+    .swiper-button-next,
+    .swiper-button-prev {
+        color: var(--primary-blue);
+        background: rgba(255, 255, 255, 0.9);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    .swiper-button-next:after,
+    .swiper-button-prev:after {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+    .swiper-pagination-bullet {
+        width: 10px;
+        height: 10px;
+        background: #dee2e6;
+        opacity: 1;
+    }
+</style>
+    
+<script>
+// Simple and reliable Swiper initialization
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if Swiper is available
+    if (typeof Swiper === 'undefined') {
+        console.error('Swiper is not loaded!');
+        return;
+    }
+    
+    // Initialize Swiper with minimal configuration
+    try {
+        const swiper = new Swiper('.projects-carousel', {
+            // Core parameters
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            speed: 800,
+            
+            // Enable autoplay
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            
+            // Navigation arrows
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            
+            // Pagination
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+                type: 'bullets',
+            },
+            
+            // Responsive breakpoints
+            breakpoints: {
+                576: {
+                    slidesPerView: 1,
+                },
+                768: {
+                    slidesPerView: 2,
+                },
+                992: {
+                    slidesPerView: 3,
+                }
+            },
+            
+            // Event callbacks and debugger
+            on: {
+                beforeInit: function() {
+                    console.log('About to initialize Swiper');
+                },
+                init: function() {
+                    console.log('Swiper initialized successfully');
+                    console.log('Swiper instance:', this);
+                    // Force autoplay to start
+                    if (this.autoplay) {
+                        this.autoplay.start();
+                        console.log('Autoplay started');
+                    } else {
+                        console.warn('Autoplay module not available');
+                    }
+                },
+                slideChange: function() {
+                    console.log('Slide changed to', this.activeIndex);
+                },
+                error: function(error) {
+                    console.error('Swiper error:', error);
+                }
+            },
+            
+            // Enable keyboard control
+            keyboard: {
+                enabled: true,
+                onlyInViewport: true,
+            },
+            
+            // Enable mousewheel control
+            mousewheel: {
+                forceToAxis: true,
+            }
+        });
+        
+        // Additional check after initialization
+        setTimeout(function() {
+            if (!swiper.autoplay || !swiper.autoplay.running) {
+                console.warn('Autoplay not running, attempting to start manually');
+                if (swiper.autoplay) {
+                    swiper.autoplay.start();
+                }
+            }
+        }, 1000);
+        
+        // Expose swiper instance for debugging
+        window.projectSwiper = swiper;
+        
+    } catch (error) {
+        console.error('Error initializing Swiper:', error);
+    }
+}
+</script>
+</section>
+
+<!-- Development Initiatives Section with Parallax -->
+<section class="py-5 position-relative text-white" style="
+    background: linear-gradient(rgba(0, 51, 102, 0.85), rgba(0, 51, 102, 0.9)), 
+                url('{% static 'images/1750862555912.jpg' %}') no-repeat center center fixed; 
+    background-size: cover; 
+    background-attachment: fixed;
+">
+    <div class="container position-relative">
+        <div class="text-center mb-5">
+            <h2 class="text-white">Development Initiatives</h2>
+            <p class="lead">Transforming Puntland through strategic planning and international cooperation</p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Initiative 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-lg overflow-hidden bg-white text-dark" style="border-radius: 15px; transition: transform 0.3s ease;">
+                    <div class="position-relative">
+                        <img src="{% static 'images/1750862523664.jpg' %}" class="card-img-top" alt="Economic Growth" style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-0 start-0 p-3">
+                            <span class="badge bg-success">In Progress</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <small class="text-muted"><i class="fas fa-chart-line me-2"></i>Economic Development</small>
+                        </div>
+                        <h5 class="card-title">Puntland Economic Stimulus Package</h5>
+                        <p class="card-text text-muted">A comprehensive $50M initiative to stimulate local businesses and create sustainable employment opportunities across key sectors.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <a href="#" class="btn btn-outline-primary btn-sm">Learn More <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Initiative 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-lg overflow-hidden bg-white text-dark" style="border-radius: 15px; transition: transform 0.3s ease;">
+                    <div class="position-relative">
+                        <img src="{% static 'images/1750862545510.jpg' %}" class="card-img-top" alt="Infrastructure" style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-0 start-0 p-3">
+                            <span class="badge bg-primary">New</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <small class="text-muted"><i class="fas fa-road me-2"></i>Infrastructure</small>
+                        </div>
+                        <h5 class="card-title">Urban Renewal Program</h5>
+                        <p class="card-text text-muted">Modernizing urban centers with sustainable infrastructure, including roads, water systems, and public facilities to improve quality of life.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <a href="#" class="btn btn-outline-primary btn-sm">Explore Projects <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Initiative 3 -->
+            <div class="col-lg-4 col-md-6 mx-auto">
+                <div class="card h-100 border-0 shadow-lg overflow-hidden bg-white text-dark" style="border-radius: 15px; transition: transform 0.3s ease;">
+                    <div class="position-relative">
+                        <img src="{% static 'images/1750862581468.jpg' %}" class="card-img-top" alt="Education" style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-0 start-0 p-3">
+                            <span class="badge bg-info">Upcoming</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <small class="text-muted"><i class="fas fa-graduation-cap me-2"></i>Education</small>
+                        </div>
+                        <h5 class="card-title">Skills Development Initiative</h5>
+                        <p class="card-text text-muted">Empowering youth with vocational training and skills development programs to meet the demands of Puntland's growing economy.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <a href="#" class="btn btn-outline-primary btn-sm">Get Involved <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{% url 'main:projects' %}" class="btn btn-light btn-lg">View All Initiatives <i class="fas fa-arrow-right ms-2"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- Meet Our Team Section -->
+<section class="py-5 bg-light position-relative">
+    <div class="position-absolute w-100 h-100" style="
+        background: url('{% static 'images/pattern-light.png' %}') repeat;
+        opacity: 0.05;
+        z-index: 0;
+    "></div>
+    <div class="container position-relative" style="z-index: 1">
+        <div class="text-center mb-5">
+            <h2>Meet Our Team</h2>
+            <p class="lead text-muted">Our dedicated team of professionals working towards the development of Puntland</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 text-center">
+                    <div class="position-relative">
+                        <img src="{% static 'images/team1.jpg' %}" class="card-img-top rounded-circle mx-auto mt-4" alt="Team Member" style="width: 150px; height: 150px; object-fit: cover;">
+                        <div class="social-links position-absolute top-0 end-0 mt-3 me-3">
+                            <a href="#" class="text-primary me-2"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="text-primary"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">Dr. Ahmed Mohamed</h5>
+                        <p class="text-muted mb-2">Director General</p>
+                        <p class="card-text small text-muted">Leading our team with over 15 years of experience in public policy and development.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 text-center">
+                    <div class="position-relative">
+                        <img src="{% static 'images/team2.jpg' %}" class="card-img-top rounded-circle mx-auto mt-4" alt="Team Member" style="width: 150px; height: 150px; object-fit: cover;">
+                        <div class="social-links position-absolute top-0 end-0 mt-3 me-3">
+                            <a href="#" class="text-primary me-2"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="text-primary"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">Amina Abdi</h5>
+                        <p class="text-muted mb-2">Head of International Relations</p>
+                        <p class="card-text small text-muted">Expert in international development cooperation and partnership building.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 text-center">
+                    <div class="position-relative">
+                        <img src="{% static 'images/team3.jpg' %}" class="card-img-top rounded-circle mx-auto mt-4" alt="Team Member" style="width: 150px; height: 150px; object-fit: cover;">
+                        <div class="social-links position-absolute top-0 end-0 mt-3 me-3">
+                            <a href="#" class="text-primary me-2"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="text-primary"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">Omar Hassan</h5>
+                        <p class="text-muted mb-2">Project Manager</p>
+                        <p class="card-text small text-muted">Specialized in infrastructure development and project management.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="#" class="btn btn-outline-primary">View All Team Members</a>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Cards Section -->
+<section class="py-5 bg-white position-relative">
+    <div class="position-absolute w-100 h-100" style="background: url('{% static 'images/pattern-light.png' %}') repeat; opacity: 0.03; z-index: 0;"></div>
+    <div class="container position-relative" style="z-index: 1">
+        <div class="text-center mb-5">
+            <h2 class="text-primary">Get In Touch</h2>
+            <p class="lead text-muted">We're here to help and answer any questions you might have</p>
+        </div>
+        <div class="row g-4">
+            <!-- Address Card -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-4" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-map-marker-alt fa-2x"></i>
+                        </div>
+                        <h4 class="mb-3">Our Location</h4>
+                        <p class="text-muted mb-0">
+                            Ministry of Planning and International Cooperation<br>
+                            Garowe, Puntland, Somalia
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-center pb-4">
+                        <a href="https://maps.google.com" target="_blank" class="btn btn-outline-primary">
+                            <i class="fas fa-directions me-2"></i>Get Directions
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Info Card -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-4" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-phone-alt fa-2x"></i>
+                        </div>
+                        <h4 class="mb-3">Contact Info</h4>
+                        <ul class="list-unstyled text-muted mb-0">
+                            <li class="mb-2"><i class="fas fa-phone-alt me-2 text-primary"></i> +252 90 123 4567</li>
+                            <li class="mb-2"><i class="fas fa-phone-alt me-2 text-primary"></i> +252 61 234 5678</li>
+                            <li class="mb-2"><i class="fas fa-envelope me-2 text-primary"></i> info@mopdic.puntland.gov.so</li>
+                            <li><i class="fas fa-fax me-2 text-primary"></i> +252 90 987 6543</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-center pb-4">
+                        <a href="mailto:info@mopdic.puntland.gov.so" class="btn btn-outline-primary">
+                            <i class="fas fa-envelope me-2"></i>Send Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Working Hours Card -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-4" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                            <i class="far fa-clock fa-2x"></i>
+                        </div>
+                        <h4 class="mb-3">Working Hours</h4>
+                        <ul class="list-unstyled text-muted mb-0">
+                            <li class="d-flex justify-content-between py-2 border-bottom"><span>Monday - Thursday</span> <span>8:00 AM - 4:00 PM</span></li>
+                            <li class="d-flex justify-content-between py-2 border-bottom"><span>Friday</span> <span>8:00 AM - 12:00 PM</span></li>
+                            <li class="d-flex justify-content-between py-2"><span>Saturday - Sunday</span> <span>Closed</span></li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-center pb-4">
+                        <a href="#contact-form" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-2"></i>Send Message
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Links -->
+<section class="py-5 bg-light position-relative">
+    <div class="position-absolute w-100 h-100" style="
+        background: url('{% static 'images/pattern-light.png' %}') repeat;
+        opacity: 0.05;
+        z-index: 0;
+    "></div>
+    <div class="container position-relative" style="z-index: 1">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-file-alt fa-3x text-primary mb-3"></i>
+                        <h4>Publications</h4>
+                        <p>Access our latest reports, policies, and research documents.</p>
+                        <a href="#" class="btn btn-outline-primary">View All</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-calendar-alt fa-3x text-primary mb-3"></i>
+                        <h4>Events</h4>
+                        <p>Stay updated with our upcoming events and important dates.</p>
+                        <a href="#" class="btn btn-outline-primary">View Calendar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-chart-pie fa-3x text-primary mb-3"></i>
+                        <h4>Statistics</h4>
+                        <p>Explore key statistics and data about Puntland State.</p>
+                        <a href="#" class="btn btn-outline-primary">View Statistics</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

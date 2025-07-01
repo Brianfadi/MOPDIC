@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header-content">
+                    <h1>{{ project.title }}</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'main:home' %}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'main:projects' %}">Projects</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ project.title|truncatewords:5 }}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Project Detail Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                {% if project.image %}
+                    <div class="project-image mb-4">
+                        <img src="{{ project.image.url }}" alt="{{ project.title }}" class="img-fluid rounded">
+                    </div>
+                {% endif %}
+                
+                <div class="project-content">
+                    <div class="project-meta mb-4">
+                        <span class="badge bg-{{ project.status|lower }} me-2">
+                            {{ project.get_status_display }}
+                        </span>
+                        <span class="text-muted">
+                            <i class="far fa-calendar-alt me-1"></i>
+                            {{ project.start_date|date:"M Y" }}
+                            {% if project.end_date %}
+                                - {{ project.end_date|date:"M Y" }}
+                            {% else %}
+                                - Present
+                            {% endif %}
+                        </span>
+                        {% if project.location %}
+                            <span class="ms-3 text-muted">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                {{ project.location }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="project-description mb-5">
+                        {{ project.description|safe }}
+                    </div>
+                    
+                    {% if project.categories.exists %}
+                        <div class="project-categories mb-4">
+                            <h5 class="mb-3">Categories</h5>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for category in project.categories.all %}
+                                    <span class="badge bg-secondary">{{ category.name }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="project-sidebar">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Project Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-calendar-alt me-2 text-primary"></i> Start Date</span>
+                                    <span>{{ project.start_date|date:"F j, Y" }}</span>
+                                </li>
+                                {% if project.end_date %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-calendar-check me-2 text-primary"></i> End Date</span>
+                                        <span>{{ project.end_date|date:"F j, Y" }}</span>
+                                    </li>
+                                {% endif %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-tasks me-2 text-primary"></i> Status</span>
+                                    <span class="badge bg-{{ project.status|lower }}">
+                                        {{ project.get_status_display }}
+                                    </span>
+                                </li>
+                                {% if project.budget %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-coins me-2 text-primary"></i> Budget</span>
+                                        <span>KSh {{ project.budget|floatformat:2 }}</span>
+                                    </li>
+                                {% endif %}
+                                {% if project.location %}
+                                    <li class="list-group-item">
+                                        <div class="d-flex">
+                                            <span class="me-2"><i class="fas fa-map-marker-alt text-primary"></i></span>
+                                            <span>{{ project.location }}</span>
+                                        </div>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Related Projects -->
+                    {% if related_projects %}
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Related Projects</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="list-group list-group-flush">
+                                    {% for related in related_projects %}
+                                        <a href="{{ related.get_absolute_url }}" class="list-group-item list-group-item-action">
+                                            <div class="d-flex align-items-center">
+                                                {% if related.image %}
+                                                    <img src="{{ related.image.url }}" alt="{{ related.title }}" class="rounded me-3" width="60" height="60" style="object-fit: cover;">
+                                                {% else %}
+                                                    <div class="bg-light rounded d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                                                        <i class="fas fa-image text-muted"></i>
+                                                    </div>
+                                                {% endif %}
+                                                <div>
+                                                    <h6 class="mb-0">{{ related.title }}</h6>
+                                                    <small class="text-muted">{{ related.start_date|date:"M Y" }}</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Gallery Section -->
+{% if project.gallery_images.exists %}
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="section-title text-center mb-5">
+            <h2>Project Gallery</h2>
+            <div class="title-divider"></div>
+        </div>
+        
+        <div class="row g-4">
+            {% for image in project.gallery_images.all %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="gallery-item">
+                        <a href="{{ image.image.url }}" data-lightbox="project-gallery" data-title="{{ image.caption|default:project.title }}">
+                            <img src="{{ image.image.url }}" alt="{{ image.caption|default:project.title }}" class="img-fluid rounded">
+                            {% if image.caption %}
+                                <div class="gallery-caption">{{ image.caption }}</div>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Project Detail Styles */
+    .project-image {
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+    
+    .project-meta {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .project-description {
+        line-height: 1.8;
+    }
+    
+    .project-description img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.5rem;
+        margin: 1.5rem 0;
+    }
+    
+    .project-sidebar .card {
+        border: none;
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+    
+    .project-sidebar .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #eee;
+        font-weight: 600;
+    }
+    
+    .list-group-item {
+        padding: 0.75rem 1.25rem;
+        border-color: #eee;
+    }
+    
+    .gallery-item {
+        position: relative;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery-item:hover {
+        transform: translateY(-5px);
+    }
+    
+    .gallery-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .gallery-item:hover img {
+        transform: scale(1.05);
+    }
+    
+    .gallery-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Status Badges */
+    .bg-ongoing {
+        background-color: #0d6efd !important;
+    }
+    
+    .bg-completed {
+        background-color: #198754 !important;
+    }
+    
+    .bg-planned {
+        background-color: #6c757d !important;
+    }
+    
+    .bg-on_hold, .bg-cancelled {
+        background-color: #dc3545 !important;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Lightbox2 for image gallery -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+<script>
+    // Initialize lightbox
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true,
+        'alwaysShowNavOnTouchDevices': true
+    });
+    
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

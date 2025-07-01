@@ -1,0 +1,215 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<!-- Include any additional CSS here -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .required-field:after {
+        content: " *";
+        color: #e74a3b;
+    }
+    .image-preview {
+        max-width: 300px;
+        max-height: 200px;
+        margin-top: 10px;
+        display: none;
+    }
+    .select2-container {
+        width: 100% !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">
+            {% if edit_mode %}
+                Edit News Article
+            {% else %}
+                Add New News Article
+            {% endif %}
+        </h6>
+        <a href="{% url 'admin:news_list' %}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Title -->
+                    <div class="form-group">
+                        <label for="title" class="required-field">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" 
+                               value="{{ form.title.value|default:'' }}" required>
+                        {% if form.title.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.title.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Short Description -->
+                    <div class="form-group">
+                        <label for="short_description">Short Description (Max 300 characters)</label>
+                        <textarea class="form-control" id="short_description" name="short_description" 
+                                 rows="3" maxlength="300">{{ form.short_description.value|default:'' }}</textarea>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="form-group">
+                        <label for="content" class="required-field">Content</label>
+                        <textarea class="form-control" id="content" name="content" rows="10" required>{{ form.content.value|default:'' }}</textarea>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label for="status" class="required-field">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            {% for value, label in form.fields.status.choices %}
+                                <option value="{{ value }}" 
+                                    {% if form.status.value == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Publish Date -->
+                    <div class="form-group">
+                        <label for="publish_date" class="required-field">Publish Date & Time</label>
+                        <input type="datetime-local" class="form-control" id="publish_date" name="publish_date" 
+                               value="{{ form.publish_date.value|date:'Y-m-d\TH:i' }}" required>
+                    </div>
+                    
+                    <!-- Featured Image -->
+                    <div class="form-group">
+                        <label for="feature_image">Featured Image</label>
+                        {% if form.instance.feature_image %}
+                            <div class="mb-2">
+                                <img src="{{ form.instance.feature_image.url }}" alt="Current featured image" class="img-fluid mb-2" style="max-width: 100%; height: auto;">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="clear_feature_image" name="feature_image-clear">
+                                    <label class="form-check-label" for="clear_feature_image">
+                                        Clear current image
+                                    </label>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="feature_image" name="feature_image" 
+                                   accept="image/*" {% if not form.instance.feature_image %}required{% endif %}>
+                            <label class="custom-file-label" for="feature_image">Choose file</label>
+                        </div>
+                        <small class="form-text text-muted">Recommended size: 1200x630px</small>
+                        <img id="imagePreview" src="#" alt="Preview" class="img-fluid mt-2" style="display: none; max-width: 100%; height: auto;">
+                    </div>
+                    
+                    <!-- Is Featured -->
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="is_featured" name="is_featured" 
+                                   {% if form.is_featured.value %}checked{% endif %}>
+                            <label class="custom-control-label" for="is_featured">Feature this article</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Author -->
+                    <div class="form-group">
+                        <label for="author">Author</label>
+                        <select class="form-control select2" id="author" name="author">
+                            <option value="">---------</option>
+                            {% for user in users %}
+                                <option value="{{ user.id }}" 
+                                    {% if form.author.value == user.id %}selected{% endif %}>
+                                    {{ user.get_full_name|default:user.username }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Categories -->
+                    <div class="form-group">
+                        <label for="categories">Categories</label>
+                        <select class="form-control select2" id="categories" name="categories" multiple>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" 
+                                    {% if category in form.instance.categories.all %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <a href="{% url 'admin:news_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                {% if edit_mode %}
+                <a href="{% url 'admin:news_delete' form.instance.id %}" 
+                   class="btn btn-danger float-right"
+                   onclick="return confirm('Are you sure you want to delete this news article? This action cannot be undone.');">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Include Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialize Select2
+        $('.select2').each(function() {
+            const placeholder = $(this).attr('id') === 'author' ? 'Select an author' : 'Select categories';
+            $(this).select2({
+                placeholder: placeholder,
+                allowClear: true
+            });
+        });
+        
+        // Show image preview when a new image is selected
+        $('#feature_image').change(function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#imagePreview').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(file);
+                
+                // Update the file input label
+                $(this).next('.custom-file-label').text(file.name);
+            }
+        });
+        
+        // Show/hide clear image checkbox
+        $('input[type=file]').on('change', function() {
+            if ($(this).val()) {
+                $('#clear_featured_image').prop('disabled', true);
+            } else {
+                $('#clear_featured_image').prop('disabled', false);
+            }
+        });
+    });
+</script>
+{% endblock %}

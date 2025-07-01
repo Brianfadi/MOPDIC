@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MOPDIC{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #0056b3; /* Changed from red to blue */
+        }
+        /* Remove default margins and padding */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .top-bar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 0;
+            font-size: 14px;
+        }
+        .top-bar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .top-bar .social-icons a {
+            margin: 0 5px;
+        }
+        .main-header {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            height: 80px;
+            margin-right: 15px;
+        }
+        .ministry-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+            line-height: 1.2;
+        }
+        .ministry-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        .nav-custom {
+            background: #4b6b8a !important; /* Gray-blue color */
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+            padding: 0;
+        }
+        .navbar-brand:hover {
+            opacity: 0.9;
+        }
+        .nav-custom .navbar-nav .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            padding: 15px 20px;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .nav-custom .navbar-nav .nav-link i {
+            font-size: 1rem;
+            margin-right: 5px;
+        }
+        .nav-custom .navbar-nav .nav-link:hover,
+        .nav-custom .navbar-nav .nav-link.active,
+        .nav-custom .navbar-nav .show > .nav-link,
+        .nav-custom .navbar-nav .nav-link:focus {
+            background-color: var(--secondary-color);
+            color: white !important;
+        }
+        .nav-custom .dropdown-menu {
+            border: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 0;
+            border-top: 3px solid var(--secondary-color);
+        }
+        .nav-custom .dropdown-item {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        .nav-custom .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+            padding-left: 25px;
+        }
+        .nav-custom .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        .dropdown-menu {
+            border: none;
+            border-radius: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .dropdown-item {
+            padding: 8px 20px;
+        }
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+        }
+        .search-box {
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 5px;
+            width: 200px;
+        }
+        .search-box button {
+            background: none;
+            border: none;
+            color: #666;
+            padding: 5px 10px;
+        }
+        /* Remove margin from navbar */
+        .nav-custom {
+            margin-bottom: 0 !important;
+        }
+        /* Ensure hero section starts right after navbar */
+        .hero-section {
+            margin-top: 0 !important;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <span><i class="fas fa-phone-alt me-2"></i> +252 907 000000</span>
+                    <span class="ms-3"><i class="fas fa-envelope me-2"></i> info@mopdic.puntland.so</span>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="social-icons d-inline-block me-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <div class="language-selector d-inline-block">
+                        <a href="#" class="active">EN</a> | 
+                        <a href="#">AR</a> | 
+                        <a href="#">SO</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark nav-custom px-0">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand d-flex align-items-center me-4" href="{% url 'main:home' %}">
+                    <img src="{% static 'images/logo.png' %}" alt="MOPDIC Logo" class="logo me-2" style="height: 50px;">
+                    <div>
+                        <div class="ministry-name">MOPDIC</div>
+                        <div class="ministry-subtitle">Puntland State of Somalia</div>
+                    </div>
+                </a>
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'main:home' %}">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-info-circle me-1"></i> About Us
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
+                            <li><a class="dropdown-item" href="{% url 'main:ministry_profile' %}"><i class="fas fa-building me-2"></i> Ministry Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'main:organizational_structure' %}"><i class="fas fa-sitemap me-2"></i> Organizational Structure</a></li>
+                            <li><a class="dropdown-item" href="{% url 'main:management_team' %}"><i class="fas fa-users me-2"></i> Management Team</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'main:history' %}"><i class="fas fa-history me-2"></i> Our History</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="departmentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-building me-1"></i> Departments
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="departmentsDropdown">
+                            <li><a class="dropdown-item" href="{% url 'main:department_detail' 'planning-statistics' %}"><i class="fas fa-chart-line me-2"></i> Planning & Statistics</a></li>
+                            <li><a class="dropdown-item" href="{% url 'main:department_detail' 'international-cooperation' %}"><i class="fas fa-hand-holding-usd me-2"></i> International Cooperation</a></li>
+                            <li><a class="dropdown-item" href="{% url 'main:department_detail' 'project-implementation' %}"><i class="fas fa-project-diagram me-2"></i> Project Implementation</a></li>
+                            <li><a class="dropdown-item" href="{% url 'main:department_detail' 'monitoring-evaluation' %}"><i class="fas fa-chart-pie me-2"></i> Monitoring & Evaluation</a></li>
+                            <li><a class="dropdown-item" href="{% url 'main:department_detail' 'research-development' %}"><i class="fas fa-database me-2"></i> Research & Development</a></li>
+                            <li><a class="dropdown-item" href="{% url 'main:department_detail' 'human-resources' %}"><i class="fas fa-users me-2"></i> Human Resources</a></li>
+                            <li><a class="dropdown-item" href="{% url 'main:department_detail' 'finance-administration' %}"><i class="fas fa-money-bill-wave me-2"></i> Finance & Administration</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'main:projects' %}">
+                            <i class="fas fa-project-diagram me-1"></i> Projects
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-book me-1"></i> Resources
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="resourcesDropdown">
+                            <li><a class="dropdown-item" href="{% url 'main:publications' %}"><i class="fas fa-file-pdf me-2"></i> Publications</a></li>
+                            <li><a class="dropdown-item" href="{% url 'main:statistics' %}"><i class="fas fa-chart-line me-2"></i> Statistics</a></li>
+                            <li><a class="dropdown-item" href="{% url 'main:documents' %}"><i class="fas fa-download me-2"></i> Downloads</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'main:news_events' %}">
+                            <i class="fas fa-newspaper me-1"></i> News & Events
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'main:contact' %}" title="Contact Us">
+                            <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        {% if user.is_authenticated %}
+                        <a class="nav-link" href="{% url 'admin:index' %}" title="Dashboard">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                        <a class="nav-link" href="{% url 'main:logout' %}" title="Logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                        {% else %}
+                        <a class="nav-link" href="{% url 'main:login' %}" title="Login">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-white py-4 mt-4" style="background-color: #3a5169;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <address>
+                        Ministry of Planning and International Cooperation<br>
+                        Garowe, Puntland, Somalia<br>
+                        <i class="fas fa-phone me-2"></i> +252 90 123 4567<br>
+                        <i class="fas fa-envelope me-2"></i> info@mopdic.puntland.gov.so
+                    <div class="mt-4">
+                        <h6 class="text-uppercase fw-bold">Working Hours</h6>
+                        <p class="mb-1">Monday - Friday: 8:00 AM - 4:00 PM</p>
+                        <p class="mb-0">Saturday: 9:00 AM - 1:00 PM</p>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="col-md-3 col-lg-2 col-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase fw-bold mb-4">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="#" class="text-white text-decoration-none d-flex align-items-center">
+                                <i class="fas fa-chevron-right me-2 small"></i> About Us
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-white text-decoration-none d-flex align-items-center">
+                                <i class="fas fa-chevron-right me-2 small"></i> Programs
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-white text-decoration-none d-flex align-items-center">
+                                <i class="fas fa-chevron-right me-2 small"></i> Projects
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-white text-decoration-none d-flex align-items-center">
+                                <i class="fas fa-chevron-right me-2 small"></i> Resources
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-white text-decoration-none d-flex align-items-center">
+                                <i class="fas fa-chevron-right me-2 small"></i> News & Events
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-white text-decoration-none d-flex align-items-center">
+                                <i class="fas fa-chevron-right me-2 small"></i> Contact Us
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="col-md-5 col-lg-4">
+                    <h5 class="text-uppercase fw-bold mb-4">Newsletter</h5>
+                    <p class="mb-4">Subscribe to our newsletter to receive updates on our programs and activities.</p>
+                    <form class="mb-4">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control form-control-lg bg-dark text-white border-0" 
+                                   placeholder="Your email address" aria-label="Email" aria-describedby="button-addon2">
+                            <button class="btn btn-primary px-4" type="submit" id="button-addon2">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="privacyCheck">
+                            <label class="form-check-label small" for="privacyCheck">
+                                I agree to the privacy policy
+                            </label>
+                        </div>
+                    </form>
+                    
+                    <!-- Social Media -->
+                    <div class="social-links mt-4">
+                        <h6 class="text-uppercase fw-bold mb-3">Follow Us</h6>
+                        <a href="#" class="text-white me-3" aria-label="Facebook">
+                            <i class="fab fa-facebook-f fa-lg"></i>
+                        </a>
+                        <a href="#" class="text-white me-3" aria-label="Twitter">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                        <a href="#" class="text-white me-3" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in fa-lg"></i>
+                        </a>
+                        <a href="#" class="text-white me-3" aria-label="YouTube">
+                            <i class="fab fa-youtube fa-lg"></i>
+                        </a>
+                        <a href="#" class="text-white" aria-label="Instagram">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <hr class="my-4 bg-light">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="mb-0">&copy; {% now "Y" %} Ministry of Planning and International Cooperation. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item">
+                            <a href="#" class="text-white text-decoration-none small">Privacy Policy</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <span class="mx-2">|</span>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#" class="text-white text-decoration-none small">Terms of Use</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <span class="mx-2">|</span>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#" class="text-white text-decoration-none small">Sitemap</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

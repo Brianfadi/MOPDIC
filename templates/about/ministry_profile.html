@@ -1,0 +1,431 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - MOPDIC{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-section {
+        padding: 80px 0;
+    }
+    
+    .profile-header {
+        margin-bottom: 50px;
+        text-align: center;
+    }
+    
+    .profile-header h1 {
+        font-size: 2.8rem;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+    
+    .profile-header p.lead {
+        font-size: 1.2rem;
+        color: #6c757d;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .profile-content {
+        margin-bottom: 50px;
+    }
+    
+    .profile-content h2 {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin: 40px 0 20px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+    
+    .profile-content h2:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 60px;
+        height: 3px;
+        background: var(--primary-color);
+    }
+    
+    .profile-content p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #555;
+        margin-bottom: 20px;
+    }
+    
+    .profile-image {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+    
+    .profile-image img {
+        width: 100%;
+        height: auto;
+        transition: transform 0.5s ease;
+    }
+    
+    .profile-image:hover img {
+        transform: scale(1.05);
+    }
+    
+    .objective-box {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+        margin: 30px 0;
+        border-left: 4px solid var(--primary-color);
+    }
+    
+    .objective-box h3 {
+        color: var(--primary-color);
+        margin-bottom: 20px;
+    }
+    
+    .objective-box ul {
+        padding-left: 20px;
+    }
+    
+    .objective-box ul li {
+        margin-bottom: 10px;
+        position: relative;
+        padding-left: 15px;
+    }
+    
+    .objective-box ul li:before {
+        content: '•';
+        color: var(--primary-color);
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+    
+    .function-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        height: 100%;
+        border-top: 3px solid var(--primary-color);
+    }
+    
+    .function-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .function-card i {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        display: inline-block;
+    }
+    
+    .function-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: #2c3e50;
+    }
+    
+    .function-card p {
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+    
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+        margin: 40px 0;
+    }
+    
+    .timeline:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e9ecef;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-bottom: 30px;
+        padding-left: 30px;
+    }
+    
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+    
+    .timeline-item:before {
+        content: '';
+        position: absolute;
+        left: -40px;
+        top: 5px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        border: 3px solid #fff;
+        box-shadow: 0 0 0 2px var(--primary-color);
+    }
+    
+    .timeline-year {
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        display: block;
+    }
+    
+    .timeline-title {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        color: #2c3e50;
+    }
+    
+    @media (max-width: 768px) {
+        .profile-header h1 {
+            font-size: 2.2rem;
+        }
+        
+        .profile-content h2 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+{% include 'includes/page_header.html' with title='Ministry Profile' %}
+
+<!-- Ministry Profile Section -->
+<section class="profile-section">
+    <div class="container">
+        <div class="profile-header">
+            <h1>Ministry of Planning and International Cooperation</h1>
+            <p class="lead">Driving sustainable development and international partnerships for a prosperous Puntland</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="profile-content">
+                    <h2>Overview</h2>
+                    <p>The Ministry of Planning and International Cooperation (MOPIC) is a key government institution responsible for planning, coordinating, and monitoring development programs and projects in Puntland State of Somalia. Established to guide the region's development agenda, MOPIC plays a pivotal role in shaping policies, mobilizing resources, and fostering international partnerships to achieve sustainable development goals.</p>
+                    
+                    <div class="profile-image">
+                        <img src="{% static 'images/ministry-building.jpg' %}" alt="Ministry of Planning and International Cooperation" class="img-fluid">
+                    </div>
+                    
+                    <h2>Our Mandate</h2>
+                    <p>The Ministry is mandated to formulate, coordinate, and monitor the implementation of development policies, strategies, and programs in line with the Puntland State's development priorities and the national development framework. We serve as the principal advisor to the government on matters related to planning, development cooperation, and international partnerships.</p>
+                    
+                    <div class="objective-box">
+                        <h3>Strategic Objectives</h3>
+                        <ul>
+                            <li>Formulate and implement comprehensive development plans aligned with national priorities</li>
+                            <li>Coordinate development interventions across sectors and stakeholders</li>
+                            <li>Mobilize and manage development resources effectively and efficiently</li>
+                            <li>Strengthen international cooperation and partnerships for development</li>
+                            <li>Enhance monitoring and evaluation systems for better development results</li>
+                            <li>Promote evidence-based policy making through research and data analysis</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Core Functions</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="function-card">
+                                <i class="fas fa-chart-line"></i>
+                                <h3>Development Planning</h3>
+                                <p>Formulating and coordinating the implementation of short, medium, and long-term development plans that guide the region's socio-economic transformation.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="function-card">
+                                <i class="fas fa-handshake"></i>
+                                <h3>International Cooperation</h3>
+                                <p>Coordinating and managing international development cooperation, partnerships, and foreign aid to support Puntland's development priorities.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="function-card">
+                                <i class="fas fa-search-dollar"></i>
+                                <h3>Resource Mobilization</h3>
+                                <p>Identifying and mobilizing both domestic and international resources to fund development programs and projects across the region.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="function-card">
+                                <i class="fas fa-chart-pie"></i>
+                                <h3>Monitoring & Evaluation</h3>
+                                <p>Tracking and assessing the implementation of development programs to ensure effectiveness, efficiency, and impact.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h2>Our History</h2>
+                    <p>The Ministry of Planning and International Cooperation was established in 1998, following the creation of the Puntland State of Somalia. Since its inception, the Ministry has played a central role in the region's reconstruction and development efforts, working closely with local and international partners to rebuild institutions, infrastructure, and communities affected by years of conflict.</p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <span class="timeline-year">1998</span>
+                            <h3 class="timeline-title">Establishment</h3>
+                            <p>MOPIC was established as part of the newly formed Puntland State government, with a mandate to coordinate development planning and international cooperation.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="timeline-year">2005</span>
+                            <h3 class="timeline-title">First Development Plan</h3>
+                            <p>Launched Puntland's first comprehensive development plan, setting the foundation for coordinated development efforts across the region.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="timeline-year">2013</span>
+                            <h3 class="timeline-title">Institutional Strengthening</h3>
+                            <p>Implemented major capacity building initiatives to enhance the Ministry's ability to coordinate development programs and manage international partnerships.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="timeline-year">2020</span>
+                            <h3 class="timeline-title">Digital Transformation</h3>
+                            <p>Launched digital platforms for development planning and monitoring, improving transparency and efficiency in service delivery.</p>
+                        </div>
+                    </div>
+                    
+                    <h2>Our Impact</h2>
+                    <p>Over the years, MOPIC has successfully coordinated numerous development initiatives that have contributed to Puntland's socio-economic progress. From infrastructure development to capacity building and policy formulation, our work has touched the lives of millions of Puntland residents, creating opportunities for sustainable growth and improved livelihoods.</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="counter-box">
+                                <i class="fas fa-road"></i>
+                                <h3>1,200+ km</h3>
+                                <p>Roads Constructed</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="counter-box">
+                                <i class="fas fa-graduation-cap"></i>
+                                <h3>50+</h3>
+                                <p>Schools Built/Renovated</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="counter-box">
+                                <i class="fas fa-hand-holding-medical"></i>
+                                <h3>30+</h3>
+                                <p>Healthcare Facilities Supported</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="sidebar">
+                    <div class="sidebar-widget mb-4">
+                        <h3 class="widget-title">Quick Links</h3>
+                        <ul class="list-unstyled">
+                            <li><a href="{% url 'main:organizational_structure' %}"><i class="fas fa-chevron-right me-2"></i> Organizational Structure</a></li>
+                            <li><a href="{% url 'main:management_team' %}"><i class="fas fa-chevron-right me-2"></i> Our Leadership</a></li>
+                            <li><a href="{% url 'main:history' %}"><i class="fas fa-chevron-right me-2"></i> Our History</a></li>
+                            <li><a href="{% url 'main:contact' %}"><i class="fas fa-chevron-right me-2"></i> Contact Us</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-widget mb-4">
+                        <h3 class="widget-title">Key Documents</h3>
+                        <div class="document-list">
+                            <a href="#" class="document-item">
+                                <i class="far fa-file-pdf"></i>
+                                <div>
+                                    <h5>Puntland Development Plan</h5>
+                                    <span>PDF, 2.4 MB</span>
+                                </div>
+                            </a>
+                            <a href="#" class="document-item">
+                                <i class="far fa-file-word"></i>
+                                <div>
+                                    <h5>Annual Report 2023</h5>
+                                    <span>DOCX, 1.8 MB</span>
+                                </div>
+                            </a>
+                            <a href="#" class="document-item">
+                                <i class="far fa-file-pdf"></i>
+                                <div>
+                                    <h5>Strategic Plan 2022-2026</h5>
+                                    <span>PDF, 3.1 MB</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <div class="contact-box">
+                            <h3>Contact Information</h3>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-map-marker-alt"></i> Ministry of Planning and International Cooperation, Garowe, Puntland</li>
+                                <li><i class="fas fa-phone"></i> +252 90 123 4567</li>
+                                <li><i class="fas fa-envelope"></i> info@mopic.puntland.gov.so</li>
+                                <li><i class="fas fa-globe"></i> www.mopic.puntland.gov.so</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3>Interested in partnering with us?</h3>
+                <p class="mb-0">Join hands with MOPIC to contribute to Puntland's development journey.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <a href="{% url 'main:contact' %}?subject=Partnership%20Inquiry" class="btn btn-primary">Become a Partner</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Document ready function
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold">{{ title }}</h6>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">
+                            {{ form.name.label }}
+                            {% if form.name.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">
+                            {{ form.description.label }}
+                        </label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.description.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        {{ form.is_active }}
+                        <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                            {{ form.is_active.label }}
+                        </label>
+                        {% if form.is_active.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.is_active.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% if edit_mode %}{% url 'admin:category_list' %}{% else %}{% url 'admin:dashboard' %}{% endif %}" 
+                           class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to {% if edit_mode %}List{% else %}Dashboard{% endif %}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {% if edit_mode %}Update{% else %}Create{% endif %} Category
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold">Category Information</h6>
+            </div>
+            <div class="card-body">
+                <p>Categories help organize your news articles into logical groups, making it easier for users to find related content.</p>
+                <ul class="mb-0">
+                    <li>Use clear, descriptive names</li>
+                    <li>Keep descriptions concise</li>
+                    <li>Deactivate instead of deleting when possible</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if edit_mode and category.news_count > 0 %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h6 class="m-0 font-weight-bold">News in this Category ({{ category.news_count }})</h6>
+    </div>
+    <div class="card-body">
+        <p>This category is being used by {{ category.news_count }} news article{{ category.news_count|pluralize }}. 
+        If you delete this category, these articles will no longer be associated with it.</p>
+        <a href="{% url 'admin:news_list' %}?category={{ category.id }}" class="btn btn-sm btn-outline-primary">
+            View Related News
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add Bootstrap classes to form fields
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add form-control class to all input, select, and textarea elements
+        const formElements = document.querySelectorAll('input, select, textarea');
+        formElements.forEach(function(element) {
+            if (element.type !== 'checkbox' && element.type !== 'radio' && element.type !== 'submit' && element.type !== 'button') {
+                element.classList.add('form-control');
+            } else if (element.type === 'checkbox' || element.type === 'radio') {
+                element.classList.add('form-check-input');
+            }
+        });
+        
+        // Add is-invalid class to fields with errors
+        const errorFields = document.querySelectorAll('.is-invalid');
+        errorFields.forEach(function(field) {
+            field.classList.add('is-invalid');
+        });
+    });
+</script>
+{% endblock %}

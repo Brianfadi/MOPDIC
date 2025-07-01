@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <h2 class="h4 mb-3">Sign In</h2>
+                        <p class="text-muted">Access your account to continue</p>
+                    </div>
+                    
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            Your username and password didn't match. Please try again.
+                        </div>
+                    {% endif %}
+                    
+                    {% if next %}
+                        {% if user.is_authenticated %}
+                            <div class="alert alert-warning">
+                                Your account doesn't have access to this page. To proceed, please log in with an account that has access.
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info">
+                                Please log in to see this page.
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    
+                    <form method="post" action="{% url 'main:login' %}" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next }}">
+                        
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control form-control-lg" id="id_username" required autofocus>
+                            <div class="invalid-feedback">
+                                Please enter your username.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label for="id_password" class="form-label mb-0">Password</label>
+                                <a href="{% url 'password_reset' %}" class="small text-muted">Forgot password?</a>
+                            </div>
+                            <input type="password" name="password" class="form-control form-control-lg" id="id_password" required>
+                            <div class="invalid-feedback">
+                                Please enter your password.
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Sign In</button>
+                        </div>
+                        
+                        {% if not user.is_authenticated %}
+                            <div class="text-center text-muted mt-4">
+                                Contact the administrator for account access
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <p class="text-muted small">
+                    &copy; {% now "Y" %} {{ SITE_NAME }}. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    .btn-primary {
+        padding: 0.5rem 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form validation
+(function () {
+    'use strict'
+    
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+    
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                
+                form.classList.add('was-validated')
+            }, false)
+        })
+})()
+</script>
+{% endblock %}

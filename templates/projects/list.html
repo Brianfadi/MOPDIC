@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Projects - {{ block.super }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header-content">
+                    <h1>Our Projects</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'main:home' %}">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Projects</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Projects Section -->
+<section class="section-padding">
+    <div class="container">
+        <!-- Project Filters -->
+        <div class="row mb-5">
+            <div class="col-lg-12">
+                <div class="project-filters">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="status" class="form-label">Status</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="">All Status</option>
+                                <option value="ongoing" {% if request.GET.status == 'ongoing' %}selected{% endif %}>Ongoing</option>
+                                <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Completed</option>
+                                <option value="planned" {% if request.GET.status == 'planned' %}selected{% endif %}>Planned</option>
+                                <option value="on_hold" {% if request.GET.status == 'on_hold' %}selected{% endif %}>On Hold</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="year" class="form-label">Year</label>
+                            <select name="year" id="year" class="form-select">
+                                <option value="">All Years</option>
+                                {% for year in years %}
+                                    <option value="{{ year|date:'Y' }}" {% if request.GET.year == year|date:'Y' %}selected{% endif %}>{{ year|date:'Y' }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary me-2">Filter</button>
+                            <a href="{% url 'main:projects' %}" class="btn btn-outline-secondary">Reset</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="row">
+            {% if projects %}
+                {% for project in projects %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100 project-card">
+                            {% if project.image %}
+                                <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
+                            {% else %}
+                                <div class="no-image-placeholder d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-image fa-4x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <span class="badge bg-{{ project.status|lower }}">
+                                    {{ project.get_status_display }}
+                                </span>
+                                <h5 class="card-title mt-2">
+                                    <a href="{{ project.get_absolute_url }}">{{ project.title }}</a>
+                                </h5>
+                                <p class="card-text">
+                                    {{ project.short_description|default:project.description|truncatewords:25 }}
+                                </p>
+                                <ul class="project-meta">
+                                    {% if project.location %}
+                                        <li>
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            {{ project.location }}
+                                        </li>
+                                    {% endif %}
+                                    <li>
+                                        <i class="far fa-calendar-alt"></i>
+                                        {{ project.start_date|date:"M Y" }}
+                                        {% if project.end_date %}
+                                            - {{ project.end_date|date:"M Y" }}
+                                        {% else %}
+                                            - Present
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <a href="{{ project.get_absolute_url }}" class="btn btn-outline-primary btn-sm">
+                                    View Details <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        No projects found matching your criteria.
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+            <div class="row mt-4">
+                <div class="col-12">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}" aria-label="First">
+                                        <span aria-hidden="true">&laquo;&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}" aria-label="Last">
+                                        <span aria-hidden="true">&raquo;&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Project Card Styles */
+    .project-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .project-card .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .no-image-placeholder {
+        height: 200px;
+        background-color: #f8f9fa;
+        color: #6c757d;
+    }
+    
+    .badge {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.35em 0.65em;
+        text-transform: capitalize;
+    }
+    
+    .badge-ongoing {
+        background-color: #0d6efd;
+    }
+    
+    .badge-completed {
+        background-color: #198754;
+    }
+    
+    .badge-planned {
+        background-color: #6c757d;
+    }
+    
+    .badge-on_hold, .badge-cancelled {
+        background-color: #dc3545;
+    }
+    
+    .project-meta {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0 0;
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    
+    .project-meta li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .project-meta i {
+        width: 20px;
+        margin-right: 5px;
+        color: #0d6efd;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 767.98px) {
+        .project-card .card-img-top {
+            height: 180px;
+        }
+        
+        .no-image-placeholder {
+            height: 180px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MOPDIC Admin{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="#" type="image/x-icon">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --header-height: 60px;
+            --primary-color: #4e73df;
+            --secondary-color: #858796;
+            --success-color: #1cc88a;
+            --info-color: #36b9cc;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --light-color: #f8f9fc;
+            --dark-color: #5a5c69;
+        }
+        
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--light-color);
+        }
+        
+        /* Sidebar */
+        #sidebar {
+            width: var(--sidebar-width);
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--primary-color) 0%, #224abe 100%);
+            color: white;
+            position: fixed;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar-brand {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+        
+        .sidebar-brand i {
+            margin-right: 0.5rem;
+        }
+        
+        .sidebar-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            margin: 0 1rem 1rem;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link i {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        #content {
+            width: calc(100% - var(--sidebar-width));
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+        
+        /* Top Navigation */
+        .topbar {
+            height: var(--header-height);
+            background-color: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .topbar #sidebarToggleTop {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+        }
+        
+        /* Content Wrapper */
+        .container-fluid {
+            padding: 1.5rem;
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 0.35rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: calc(-1 * var(--sidebar-width));
+            }
+            
+            #content {
+                width: 100%;
+                margin-left: 0;
+            }
+            
+            #sidebar.active {
+                margin-left: 0;
+            }
+            
+            #content.active {
+                margin-left: var(--sidebar-width);
+            }
+        }
+    </style>
+    
+    {% block extra_css %}
+<style>
+    /* User avatar styles */
+    .user-avatar-container {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        object-fit: cover;
+    }
+    
+    .user-initials {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+        line-height: 1;
+    }
+    
+    .user-avatar-container img.user-avatar {
+        display: block;
+    }
+    
+    .user-avatar-container .user-initials {
+        display: none;
+    }
+    
+    .user-avatar-container img.user-avatar[src=""] {
+        display: none;
+    }
+    
+    .user-avatar-container img.user-avatar[src=""] + .user-initials {
+        display: flex;
+    }
+    
+    .user-avatar-container img.user-avatar:not([src]) + .user-initials {
+        display: flex;
+    }
+    
+    .user-avatar-container img.user-avatar:not([src=""]) {
+        display: block;
+    }
+    
+    .user-avatar-container img.user-avatar:not([src=""]) + .user-initials {
+        display: none;
+    }
+</style>
+{% endblock %}
+</head>
+<body>
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <!-- Sidebar Brand -->
+            <a class="sidebar-brand" href="{% url 'admin:dashboard' %}">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>MOPDIC Admin</span>
+            </a>
+            
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            
+            <!-- Nav Items -->
+            <div class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" 
+                       href="{% url 'admin:dashboard' %}">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                
+                <!-- News Section -->
+                <div class="sidebar-heading">
+                    Content
+                </div>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if 'news' in request.resolver_match.url_name and 'category' not in request.resolver_match.url_name %}active{% endif %}" 
+                       href="{% url 'admin:news_list' %}">
+                        <i class="fas fa-fw fa-newspaper"></i>
+                        <span>News</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if 'category' in request.resolver_match.url_name %}active{% endif %}" 
+                       href="{% url 'admin:category_list' %}">
+                        <i class="fas fa-fw fa-tags"></i>
+                        <span>News Categories</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if 'event' in request.resolver_match.url_name %}active{% endif %}" 
+                       href="{% url 'admin:events_list' %}">
+                        <i class="fas fa-fw fa-calendar-alt"></i>
+                        <span>Events</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if 'project' in request.resolver_match.url_name %}active{% endif %}" 
+                       href="{% url 'admin:projects_list' %}">
+                        <i class="fas fa-fw fa-project-diagram"></i>
+                        <span>Projects</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if 'media' in request.resolver_match.url_name %}active{% endif %}" 
+                       href="{% url 'admin:media_list' %}">
+                        <i class="fas fa-fw fa-images"></i>
+                        <span>Media</span>
+                    </a>
+                </li>
+                
+                <!-- Administration Section -->
+                <div class="sidebar-heading">
+                    Administration
+                </div>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if 'user' in request.resolver_match.url_name and 'profile' not in request.resolver_match.url_name %}active{% endif %}" 
+                       href="{% url 'admin:users_list' %}">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Users</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {% if 'setting' in request.resolver_match.url_name %}active{% endif %}" 
+                       href="{% url 'admin:general_settings' %}">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin:profile' %}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <form method="post" action="{% url 'admin:logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link bg-transparent border-0 w-100 text-start">
+                            <i class="fas fa-fw fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </li>
+            </div>
+        </div>
+        
+        <!-- Content Wrapper -->
+        <div id="content">
+            <!-- Topbar -->
+            <nav class="topbar">
+                <div id="sidebarToggleTop">
+                    <i class="fas fa-bars"></i>
+                </div>
+                
+                <div class="d-flex align-items-center">
+                    <div class="dropdown">
+                        <a class="dropdown-toggle d-flex align-items-center text-decoration-none" href="#" 
+                           id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if request.user.profile_picture %}
+                                <img class="rounded-circle me-2" src="{{ request.user.profile_picture.url }}" width="32" height="32" alt="{{ request.user.get_full_name|default:request.user.username }}" style="object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle me-2 bg-secondary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                    <i class="fas fa-user text-white" style="font-size: 14px;"></i>
+                                </div>
+                            {% endif %}
+                            <span class="d-none d-lg-inline text-gray-600 small">{{ request.user.get_full_name|default:request.user.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'admin:profile' %}">
+                                <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+                                Profile
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'admin:logout' %}" class="d-inline w-100">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item w-100 text-start">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">{% block page_title %}{% endblock %}</h1>
+                    {% block page_actions %}{% endblock %}
+                </div>
+                
+                <!-- Messages -->
+                {% if messages %}
+                <div class="row">
+                    <div class="col-12">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>{{ message }}</div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Page Content -->
+                {% block content %}
+                {% endblock %}
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper -->
+    
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    
+    <!-- Bootstrap core JavaScript-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom scripts -->
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        function setupAutoDismissAlerts() {
+            const alerts = document.querySelectorAll('.alert-dismissible');
+            alerts.forEach(alert => {
+                // Set timeout to auto-dismiss after 5 seconds
+                const timeout = setTimeout(() => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+                
+                // Clear the timeout if user manually closes the alert
+                const closeButton = alert.querySelector('.btn-close');
+                if (closeButton) {
+                    closeButton.addEventListener('click', () => {
+                        clearTimeout(timeout);
+                    });
+                }
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup auto-dismiss for alerts
+            setupAutoDismissAlerts();
+            
+            // Toggle the side navigation
+            const sidebarToggle = document.body.querySelector('#sidebarToggleTop');
+            const sidebar = document.body.querySelector('#sidebar');
+            const content = document.body.querySelector('#content');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    sidebar.classList.toggle('active');
+                    content.classList.toggle('active');
+                });
+            }
+            
+            // Close any open menu accordions when window is resized below 768px
+            window.addEventListener('resize', function() {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.remove('active');
+                    content.classList.remove('active');
+                }
+            });
+            
+            // Scroll to top button appear
+            document.addEventListener('scroll', function() {
+                const scrollToTop = document.querySelector('.scroll-to-top');
+                if (document.documentElement.scrollTop > 100) {
+                    scrollToTop.style.display = 'block';
+                } else {
+                    scrollToTop.style.display = 'none';
+                }
+            });
+            
+            // Smooth scrolling using jQuery easing
+            document.querySelectorAll('a.js-scroll-trigger[href*="#"]:not([href="#"])').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Close responsive menu when a scroll trigger link is clicked
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('active');
+                        content.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

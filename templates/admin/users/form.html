@@ -1,0 +1,384 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .required-field:after {
+        content: " *";
+        color: #e74a3b;
+    }
+    .profile-image-container {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 auto 1rem;
+        border: 3px solid #e3e6f0;
+    }
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .profile-image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fc;
+        color: #5a5c69;
+        font-size: 3rem;
+    }
+    .select2-container {
+        width: 100% !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">
+            {% if edit_mode %}
+                Edit User
+            {% else %}
+                Add New User
+            {% endif %}
+        </h6>
+        <a href="{% url 'admin:users_list' %}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <div class="profile-image-container mb-3">
+                        {% if form.instance.profile_picture %}
+                            <img id="avatarPreview" src="{{ form.instance.profile_picture.url }}" alt="Profile Image" class="profile-image">
+                            <div id="avatarInitials" class="profile-image-placeholder" style="display: none;">
+                                {{ form.instance.get_initials|default:'U' }}
+                            </div>
+                        {% else %}
+                            <div id="avatarInitials" class="profile-image-placeholder">
+                                {{ form.instance.get_initials|default:'U' }}
+                            </div>
+                            <img id="avatarPreview" src="#" alt="Preview" class="profile-image" style="display: none;">
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="id_profile_picture" name="profile_picture" accept="image/*">
+                            <label class="custom-file-label" for="id_profile_picture">Choose profile image</label>
+                        </div>
+                        <small class="form-text text-muted">Recommended size: 300x300px</small>
+                        
+                        {% if form.instance.profile_picture %}
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" id="clear_profile_picture" name="profile_picture-clear">
+                            <label class="form-check-label" for="clear_profile_picture">
+                                Remove current image
+                            </label>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_is_active" class="form-check-label">
+                            {{ form.is_active }}
+                            Active Account
+                        </label>
+                        <small class="form-text text-muted d-block">Uncheck to deactivate this user account</small>
+                    </div>
+                    
+                    {% if not edit_mode %}
+                    <div class="form-group">
+                        <label for="id_send_email" class="form-check-label">
+                            <input type="checkbox" id="id_send_email" name="send_email" checked>
+                            Send welcome email
+                        </label>
+                        <small class="form-text text-muted d-block">Send account details to the user's email</small>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_first_name" class="required-field">First Name</label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.first_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_last_name">Last Name</label>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_username" class="required-field">Username</label>
+                        {{ form.username }}
+                        <small class="form-text text-muted">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+                        {% if form.username.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.username.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_email" class="required-field">Email address</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.email.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_password1" {% if not edit_mode %}class="required-field"{% endif %}>Password</label>
+                                <input type="password" name="password1" id="id_password1" class="form-control" 
+                                       {% if not edit_mode %}required{% endif %}>
+                                {% if form.password1.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.password1.errors }}
+                                    </div>
+                                {% endif %}
+                                {% if not edit_mode %}
+                                    <small class="form-text text-muted">
+                                        <ul class="pl-3 mb-0">
+                                            <li>Your password can't be too similar to your other personal information.</li>
+                                            <li>Your password must contain at least 8 characters.</li>
+                                            <li>Your password can't be a commonly used password.</li>
+                                            <li>Your password can't be entirely numeric.</li>
+                                        </ul>
+                                    </small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_password2" {% if not edit_mode %}class="required-field"{% endif %}>Password Confirmation</label>
+                                <input type="password" name="password2" id="id_password2" class="form-control" 
+                                       {% if not edit_mode %}required{% endif %}>
+                                {% if form.password2.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.password2.errors }}
+                                    </div>
+                                {% endif %}
+                                {% if edit_mode %}
+                                    <small class="form-text text-muted">Leave blank to keep current password</small>
+                                {% else %}
+                                    <small class="form-text text-muted">Enter the same password as before, for verification.</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_groups">Groups</label>
+                        {{ form.groups }}
+                        <small class="form-text text-muted">The user will get all permissions granted to each of their groups.</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_user_permissions">User Permissions</label>
+                        {{ form.user_permissions }}
+                        <small class="form-text text-muted">Specific permissions for this user.</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="form-check">
+                            {{ form.is_staff }}
+                            <label class="form-check-label" for="id_is_staff">
+                                Staff status
+                            </label>
+                            <small class="form-text text-muted">Designates whether the user can log into this admin site.</small>
+                        </div>
+                    </div>
+                    
+                    {% if request.user.is_superuser %}
+                    <div class="form-group">
+                        <div class="form-check">
+                            {{ form.is_superuser }}
+                            <label class="form-check-label" for="id_is_superuser">
+                                Superuser status
+                            </label>
+                            <small class="form-text text-muted">Designates that this user has all permissions without explicitly assigning them.</small>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save User
+                        </button>
+                        <a href="{% url 'admin:users_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        {% if edit_mode and user != form.instance and not form.instance.is_superuser %}
+                        <a href="{% url 'admin:user_delete' form.instance.id %}" 
+                           class="btn btn-danger float-right"
+                           onclick="return confirm('Are you sure you want to delete this user? This action cannot be undone.');">
+                            <i class="fas fa-trash"></i> Delete User
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Include Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialize Select2
+        $('.select2').select2({
+            theme: 'bootstrap4',
+            width: '100%'
+        });
+        
+        // Handle profile image preview
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    $('#avatarPreview').attr('src', e.target.result);
+                    $('#avatarPreview').show();
+                    $('#avatarInitials').hide();
+                    
+                    // Update the file input label
+                    var fileName = input.files[0].name;
+                    $(input).next('.custom-file-label').html(fileName);
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        // Handle file input change
+        $('#id_profile_picture').on('change', function() {
+            readURL(this);
+        });
+        
+        // Handle clear avatar checkbox
+        $('#clear_avatar').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#avatarPreview').hide();
+                $('#avatarInitials').show();
+            } else if ($('#id_avatar')[0].files.length > 0) {
+                // If there's a new file selected, show the preview
+                $('#avatarPreview').show();
+                $('#avatarInitials').hide();
+            } else if ($('#avatarPreview').attr('src') !== '#') {
+                // If there was a previous image, show it
+                $('#avatarPreview').show();
+                $('#avatarInitials').hide();
+            } else {
+                // Otherwise show initials
+                $('#avatarPreview').hide();
+                $('#avatarInitials').show();
+            }
+        });
+        
+        // Generate username from email if empty
+        $('#id_email').on('blur', function() {
+            if (!$('#id_username').val()) {
+                var email = $(this).val();
+                if (email) {
+                    var username = email.split('@')[0];
+                    $('#id_username').val(username);
+                }
+            }
+        });
+        
+        // Show/hide password fields based on edit mode
+        {% if edit_mode %}
+        $('.password-field').hide();
+        $('.toggle-password-fields').on('click', function(e) {
+            e.preventDefault();
+            $('.password-field').toggle();
+            $(this).text(function(i, text) {
+                return text === 'Change Password' ? 'Cancel' : 'Change Password';
+            });
+        });
+        
+        // Handle password field requirements
+        $('input[type=password]').on('input', function() {
+            var isEmpty = $(this).val() === '';
+            var otherPasswordField = $(this).attr('id') === 'id_password1' ? '#id_password2' : '#id_password1';
+            
+            if (isEmpty) {
+                $(otherPasswordField).prop('required', false);
+            } else {
+                $(otherPasswordField).prop('required', true);
+            }
+        });
+        {% endif %}
+        
+        // Form validation
+        $('form').on('submit', function(e) {
+            var isValid = true;
+            
+            // Check required fields
+            $('.required-field').each(function() {
+                var $input = $('#' + $(this).attr('for'));
+                if (!$input.val()) {
+                    isValid = false;
+                    $input.addClass('is-invalid');
+                } else {
+                    $input.removeClass('is-invalid');
+                }
+            });
+            
+            // Check password match if password fields are visible
+            if ($('.password-field:visible').length > 0) {
+                var password1 = $('#id_password1').val();
+                var password2 = $('#id_password2').val();
+                
+                if (password1 !== password2) {
+                    isValid = false;
+                    $('#id_password2').addClass('is-invalid');
+                    $('<div class="invalid-feedback">Passwords do not match</div>').insertAfter('#id_password2');
+                } else if (password1 && password1.length < 8) {
+                    isValid = false;
+                    $('#id_password1').addClass('is-invalid');
+                    $('<div class="invalid-feedback">Password must be at least 8 characters long</div>').insertAfter('#id_password1');
+                }
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $('.is-invalid').first().offset().top - 100
+                }, 500);
+            }
+        });
+    });
+</script>
+{% endblock %}
