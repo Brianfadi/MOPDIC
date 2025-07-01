@@ -2,7 +2,7 @@ services:
   - type: web
     name: mopdic
     env: python
-    buildCommand: "chmod a+x build.sh && ./build.sh"
+    buildCommand: "chmod +x build.sh && ./build.sh"
     startCommand: "gunicorn mopdic.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
@@ -12,28 +12,20 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
-        value: 4
+        value: 2  # Reduced for SQLite
       - key: ALLOWED_HOSTS
         value: 'mopdic.onrender.com,localhost,127.0.0.1'
       - key: DISABLE_COLLECTSTATIC
-        value: 0
+        value: 1
       - key: PYTHONPATH
         value: '$PYTHONPATH:/opt/render/project/src'
       - key: IS_RENDER
         value: 'yes'
-    plan: free  # or 'standard' for production
+    plan: free
     autoDeploy: true
-    region: oregon  # Choose the region closest to your users
+    region: oregon
     healthCheckPath: /admin/
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: mopdic-db
-          property: connectionString
-
-# Uncomment and configure when you set up a database
-# databases:
-#   - name: mopdic-db
-#     databaseName: mopdic
-#     user: mopdic_user
-#     plan: free  # or 'standard' for production
+    disk:
+      name: sqlite-data
+      mountPath: /opt/render/project/src
+      sizeGB: 1
