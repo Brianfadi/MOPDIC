@@ -49,10 +49,16 @@ echo "Collecting static files..."
 run_command python manage.py collectstatic --noinput --clear
 
 # Copy media files to the correct location
-if [ -d "media" ]; then
+if [ -d "media" ] && [ "$(ls -A media/ 2>/dev/null)" ]; then
     echo "Copying media files..."
-    run_command cp -r media/* /opt/render/project/src/media/ 2>/dev/null || true
-    run_command chmod -R 755 /opt/render/project/src/media/
+    mkdir -p /opt/render/project/src/media/
+    cp -r media/* /opt/render/project/src/media/ 2>/dev/null || true
+    chmod -R 755 /opt/render/project/src/media/
+    echo "Media files copied successfully"
+else
+    echo "No media files to copy"
+    # Create an empty media directory if it doesn't exist
+    mkdir -p /opt/render/project/src/media/
 fi
 
 echo "=== Build completed successfully! ==="
