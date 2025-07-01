@@ -170,23 +170,30 @@ WSGI_APPLICATION = 'mopdic.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Database configuration for SQLite
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'OPTIONS': {
-            'timeout': 20,  # Add timeout for SQLite
+# Database configuration
+# Use SQLite for development, with a fallback for production
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
+    # Use the database from DATABASE_URL if available
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+else:
+    # Fallback to SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'OPTIONS': {
+                'timeout': 20,  # Add timeout for SQLite
+            }
         }
     }
-}
-
-# SQLite specific settings
-if 'sqlite3' in DATABASES['default']['ENGINE']:
-    # Improve SQLite performance
-    DATABASES['default']['OPTIONS']['journal_mode'] = 'wal'  # Write-Ahead Logging
-    DATABASES['default']['OPTIONS']['cache_size'] = 1024 * 10  # 10MB cache
-    DATABASES['default']['OPTIONS']['synchronous'] = 'NORMAL'  # Balance between safety and speed
 
 
 # Password validation

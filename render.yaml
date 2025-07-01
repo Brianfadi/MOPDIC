@@ -8,19 +8,21 @@ services:
       - key: PYTHON_VERSION
         value: 3.9.13
       - key: DEBUG
-        value: "False"
+        value: "True"  # Set to False in production
       - key: SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
-        value: 2  # Reduced for SQLite
+        value: "1"  # Only 1 worker for SQLite
       - key: ALLOWED_HOSTS
         value: 'mopdic.onrender.com,localhost,127.0.0.1'
       - key: DISABLE_COLLECTSTATIC
-        value: 1
+        value: "1"
       - key: PYTHONPATH
-        value: '$PYTHONPATH:/opt/render/project/src'
+        value: '/opt/render/project/src'
       - key: IS_RENDER
         value: 'yes'
+      - key: DATABASE_URL
+        value: 'sqlite:///opt/render/project/src/db.sqlite3'
     plan: free
     autoDeploy: true
     region: oregon
