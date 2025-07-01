@@ -38,8 +38,21 @@ echo "Applying migrations..."
 run_command python manage.py check
 run_command python manage.py migrate --noinput
 
+# Create media directory if it doesn't exist
+run_command mkdir -p media
+
+# Set proper permissions for media directory
+run_command chmod -R 755 media
+
 # Collect static files
 echo "Collecting static files..."
-run_command python manage.py collectstatic --noinput
+run_command python manage.py collectstatic --noinput --clear
+
+# Copy media files to the correct location
+if [ -d "media" ]; then
+    echo "Copying media files..."
+    run_command cp -r media/* /opt/render/project/src/media/ 2>/dev/null || true
+    run_command chmod -R 755 /opt/render/project/src/media/
+fi
 
 echo "=== Build completed successfully! ==="

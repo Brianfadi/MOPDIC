@@ -81,6 +81,26 @@ CKEDITOR_CONFIGS = {
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Serve media files in production using WhiteNoise
+if not DEBUG:
+    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # Enable the WhiteNoise storage backend for compressed static files
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    
+    # Serve media files through WhiteNoise in development (not recommended for production with many files)
+    # In production, you should use a dedicated media file service like AWS S3
+    WHITENOISE_ROOT = os.path.join(BASE_DIR, 'media')
+    
+    # Add media URL patterns in production
+    from django.urls import re_path
+    from django.views.static import serve
+    
+    urlpatterns = [
+        # ... your other URL patterns ...
+        re_path(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT, 'show_indexes': False}),
+    ]
+
 # Use our custom admin site
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

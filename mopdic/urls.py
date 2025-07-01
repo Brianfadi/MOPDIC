@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
@@ -26,6 +26,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.urls import reverse
+from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -47,6 +48,9 @@ if not settings.DEBUG:
 urlpatterns = [
     # Main app URLs
     path('', include('main.urls', namespace='main')),
+    
+    # Media files in production (served by WhiteNoise in production)
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, 'show_indexes': False}),
     
     # Authentication URLs
     path('accounts/', include('django.contrib.auth.urls')),  # This includes login, password_reset, etc.
