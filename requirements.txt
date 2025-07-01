@@ -24,3 +24,4 @@ django-crispy-forms==2.1
 crispy-bootstrap5==2023.10
 django-solo==2.2.0  # Required by django-admin-interface
 django-crum==0.7.9  # Required by django-admin-interface - latest stable version
+django-ipware==5.0.0  # Required for IP address utilities
